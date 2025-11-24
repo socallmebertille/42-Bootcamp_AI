@@ -12,9 +12,19 @@ def plot(x, y, theta):
     Raises:
         This function should not raise any Exceptions.
     """
-    plt.xlabel(x)
-    plt.ylabel(y)
-    plt.scatter()
+    if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(theta, np.ndarray):
+        return
+    if x.size == 0 or y.size == 0 or theta.size == 0:
+        return
+    if x.ndim != 1 or y.ndim != 1 or theta.shape != (2, 1):
+        return
+    plt.scatter(x, y, color='blue', label='Data points')
+    x_line = np.array([x.min(), x.max()])
+    y_line = theta[0][0] + theta[1][0] * x_line
+    plt.plot(x_line, y_line, color="red", label="Prediction line")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.legend()
     plt.show()
 
 def main():
