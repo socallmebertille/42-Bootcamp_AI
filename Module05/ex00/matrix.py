@@ -118,13 +118,15 @@ class Matrix:
 
 class Vector(Matrix):
     def __init__(self, data):
-        if not isinstance(data, list) and not isinstance(data[0], (list, int, float)):
-            raise ValueError("Data must be a list of numbers or of a list")
-        if isinstance(data[0], list) and not len(data[0]) == 1:
-            raise ValueError("Data isnot the size of a vector")
-        vec = Matrix(data)
-        self.data = vec.data
-        self.shape = vec.shape
+        if all(isinstance(x, (int, float)) for x in data): # convert vector into list of list
+            data = [[x] for x in data]
+        elif all(isinstance(row, list) and len(row) == 1 for row in data): # column vector
+            pass
+        elif len(data) == 1 and isinstance(data[0], list): # row vector
+            pass
+        else:
+            raise ValueError("Vector must be a row or column")
+        super().__init__(data)
 
     def dot(self, v: "Vector"):
         if self.shape != v.shape:
