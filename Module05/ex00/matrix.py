@@ -78,7 +78,7 @@ class Matrix:
                 s = 0.0
                 for j in range(cols):
                     s += self.data[i][j] * other.data[j][0]
-                result.append(s)
+                result.append([s]) # convert to list of lists
             return Vector(result) # returns a Vector if we perform Matrix * Vector mutliplication.
         if isinstance(other, Matrix): # mult : by matrices.
             if self.shape[1] != other.shape[0]:
@@ -121,10 +121,12 @@ class Vector(Matrix):
         if not isinstance(data, list) and not isinstance(data[0], (list, int, float)):
             raise ValueError("Data must be a list of numbers or of a list")
         if isinstance(data[0], list) and not len(data[0]) == 1:
-            return ValueError("Data isnot the size of a vector")
+            raise ValueError("Data isnot the size of a vector")
         vec = Matrix(data)
         self.data = vec.data
         self.shape = vec.shape
 
     def dot(self, v: "Vector"):
-        return self.__mul__(v)
+        if self.shape != v.shape:
+            raise ValueError("Vectors must have same shape")
+        return sum(self.data[i][0] * v.data[i][0] for i in range(self.shape[0]))
