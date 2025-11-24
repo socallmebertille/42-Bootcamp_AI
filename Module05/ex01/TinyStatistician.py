@@ -2,6 +2,9 @@ class TinyStatistician:
     def mean(self, x):
         if not isinstance(x, list) or len(x) == 0:
             return None
+        for v in x:
+            if not isinstance(v, (int, float)):
+                return None
         return float(sum(x) / len(x))
     
     def median(self, x):
@@ -43,6 +46,8 @@ class TinyStatistician:
         if not isinstance(x, list) or len(x) == 0:
             return None
         m = self.mean(x)
+        if m is None:
+            return None
         total = sum((v - m)**2 for v in x)
         return float(total / (len(x) - 1))
 
