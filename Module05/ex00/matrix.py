@@ -39,7 +39,7 @@ class Matrix:
             raise ValueError("Object is not a matrix")
         if self.shape != other.shape: # sub : only matrices of same dimensions.
             raise ValueError("Matrices must have same dimensions")
-        rows, cols = self.shaperes + i
+        rows, cols = self.shape
         result = [
             [self.data[i][j] - other.data[i][j] for j in range(cols)]
             for i in range(rows)
@@ -118,7 +118,7 @@ class Matrix:
 
 class Vector(Matrix):
     def __init__(self, data):
-        if all(isinstance(x, (int, float)) for x in data): # convert vector into list of list
+        if all(isinstance(x, (int, float)) for x in data): # convert vector into list of lists
             data = [[x] for x in data]
         elif all(isinstance(row, list) and len(row) == 1 for row in data): # column vector
             pass

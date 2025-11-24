@@ -27,7 +27,7 @@ def main():
     print("============= TEST  ===================")
 
     x = np.arange(1,6)
-    print("x array : ", x)
+    print("x arange : ", x)
 
     theta1 = np.array([5, 0])
     print("theta1 : ", theta1)
