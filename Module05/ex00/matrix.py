@@ -39,7 +39,7 @@ class Matrix:
             raise ValueError("Object is not a matrix")
         if self.shape != other.shape: # sub : only matrices of same dimensions.
             raise ValueError("Matrices must have same dimensions")
-        rows, cols = self.shape
+        rows, cols = self.shaperes + i
         result = [
             [self.data[i][j] - other.data[i][j] for j in range(cols)]
             for i in range(rows)

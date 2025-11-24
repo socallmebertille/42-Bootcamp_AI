@@ -55,7 +55,7 @@ def main():
     v1 = Vector([[1], [2], [3]])
     v2 = Vector([[2], [4], [8]])
     print("multipication de 2 vecteurs")
-    print(v1, "\n+\n", v2, "\n=\n")
+    print(v1, "\n+\n", v2, "\n=\n")TinyStatistician
     print(v1 + v2)
     print("expected : Vector([[3],[6],[11]])")
 
