@@ -3,6 +3,7 @@ import numpy as np
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from Module05.ex06.loss import predict
+from Module06.ex01.vec_gradient import gradient
 
 def fit_(x, y, theta, alpha, max_iter):
     """
@@ -26,7 +27,13 @@ def fit_(x, y, theta, alpha, max_iter):
         return None
     if x.ndim < 1 or y.ndim < 1 or x.shape != y.shape or theta.shape != (2,1):
         return None
-    return 
+    new_theta = theta.copy()
+    for _ in range(max_iter):
+        grad = gradient(x, y, new_theta)
+        if grad is None:
+            return None
+        new_theta = new_theta - alpha * grad
+    return new_theta
 
 def main():
     """Tester of my functions of precision indicator"""
@@ -36,8 +43,8 @@ def main():
     x = np.array([12.4956442, 21.5007972, 31.5527382, 48.9145838, 57.5088733]).reshape((-1, 1))
     y = np.array([37.4013816, 36.1473236, 45.7655287, 46.6793434, 59.5585554]).reshape((-1, 1))
 
-    print("x array : ", x)
-    print("y array : ", y)
+    print("x array : \n", x)
+    print("y array : \n", y)
 
     theta= np.array([1, 1]).reshape((-1, 1))
     theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1500000)
