@@ -1,7 +1,7 @@
 import numpy as np
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from Module05.ex06.loss import predict
 
 def fit_(x, y, theta, alpha, max_iter):

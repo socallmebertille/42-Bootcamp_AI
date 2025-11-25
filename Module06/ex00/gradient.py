@@ -1,5 +1,9 @@
 import numpy as np
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from Module05.ex06.loss import predict
+
 def simple_gradient(x, y, theta):
     """Computes a gradient vector from three non-empty numpy.arrays, with a for-loop.
     The three arrays must have compatible shapes.
@@ -21,7 +25,18 @@ def simple_gradient(x, y, theta):
         return None
     if x.ndim < 1 or y.ndim < 1 or x.shape != y.shape or theta.shape != (2,1):
         return None
-    return 
+    m = x.shape[0]
+    y_hat = predict(x, theta)
+
+    grad_0 = 0
+    grad_1 = 0
+    for i in range(m):
+        grad_0 += (y_hat[i] - y[i])
+        grad_1 += (y_hat[i] - y[i]) * x[i]
+    grad_0 /= m
+    grad_1 /= m
+
+    return np.concatenate(([grad_0], [grad_1]), axis=0)
 
 def main():
     """Tester of my functions of precision indicator"""
@@ -31,17 +46,17 @@ def main():
     x = np.array([12.4956442, 21.5007972, 31.5527382, 48.9145838, 57.5088733]).reshape((-1, 1))
     y = np.array([37.4013816, 36.1473236, 45.7655287, 46.6793434, 59.5585554]).reshape((-1, 1))
 
-    print("x array : ", x)
-    print("y array : ", y)
-
+    print("x array : \n", x)
+    print("y array : \n", y)
+    print("============= 1 ===================")
     theta1 = np.array([2, 0.7]).reshape((-1, 1))
     print("theta1 : \n", theta1)
-    print("gradient : ", simple_gradient(x, y, theta1) )
+    print("gradient : \n", simple_gradient(x, y, theta1) )
     print("Expected : array([[-19.0342574], [-586.66875564]])")
-
+    print("============= 2 ===================")
     theta2 = np.array([1, -0.4]).reshape((-1, 1))
     print("theta2 : \n", theta2)
-    print("gradient : ", simple_gradient(x, y, theta2) )
+    print("gradient : \n", simple_gradient(x, y, theta2) )
     print("Expected : array([[-57.86823748], [-2230.12297889]])")
 
     return 0

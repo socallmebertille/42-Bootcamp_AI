@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from ex03.my_linear_regression import MyLinearRegression as MyLR
 
 def main():
