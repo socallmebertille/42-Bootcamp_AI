@@ -126,9 +126,15 @@ class Vector(Matrix):
             pass
         else:
             raise ValueError("Vector must be a row or column")
-        super().__init__(data)
+        super().__init__(data) # super -> pour appeler une méthode de la classe parente depuis une class enfant
 
-    def dot(self, v: "Vector"):
+    def dot(self, v: "Vector"): # dot product = produit scaaire en maths
         if self.shape != v.shape:
             raise ValueError("Vectors must have same shape")
         return sum(self.data[i][0] * v.data[i][0] for i in range(self.shape[0]))
+
+
+# Interpretation produit scalaire :
+# > 0 → ils vont globalement dans la même direction
+# < 0 → opposés
+# = 0 → orthogonaux (perpendiculaires)

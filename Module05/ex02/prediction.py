@@ -14,12 +14,14 @@ def simple_predict(x, theta):
     """
     if not isinstance(x, np.ndarray) or not isinstance(theta, np.ndarray):
         return None
+    # ndim -> nb de sous tableaux
+    # shape -> (nb d'elems dans tableau, nb d'elems dans sous tableaux)
     if x.size == 0 or theta.size == 0:
         return None
     if x.ndim != 1 or theta.shape != (2,):
         return None
 
-    return (theta[0] + theta[1] * x).astype(float)
+    return (theta[0] + theta[1] * x).astype(float) # astype -> copie tableau avec type différent
 
 def main():
     """Tester of my predict function"""

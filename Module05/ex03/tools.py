@@ -15,7 +15,7 @@ def add_intercept(x):
         return None
     if x.ndim == 1:
         x = x.reshape(-1, 1) # dim(m,n) -> m = -1 => NumPy will calculate this number for you
-    ones = np.ones((x.shape[0], 1)) # coloumn of 1s of x_nb_ine
+    ones = np.ones((x.shape[0], 1)) # mat_of_1((m,n)) -> coloumn of 1s of x_nb_line
     return np.concatenate((ones, x), axis=1) # axis = 1 => concat horizontalement (0 => vert. / None => tout sur une ligne)
 
 def main():
@@ -25,12 +25,12 @@ def main():
 
     x = np.arange(1,6)
     print("x arange :\n", x)
-    print(add_intercept(x))
+    print("intercept : \n", add_intercept(x))
     print("Expected : array([[1., 1.],\n\t\t[1., 2.],\n\t\t[1., 3.],\n\t\t[1., 4.],\n\t\t[1., 5.]])")
 
     y = np.arange(1,10).reshape((3,3))
     print("y arange : \n", y)
-    print(add_intercept(y))
+    print("intercept : \n", add_intercept(y))
     print("Expected : array([[1., 1., 2., 3.],\n\t\t[1., 4., 5., 6.],\n\t\t[1., 7., 8., 9.]])")
 
     return 0

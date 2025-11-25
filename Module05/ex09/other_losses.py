@@ -115,3 +115,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# MSE = Erreur moyenne au carré => prédictions sont loin des vraies valeurs si MSE loin de 0
+# RMSE = MSE ramené à l’unité originale => de meme, + proche de 0 + precis
+# MAE = Erreur moyenne en valeur absolue => + c’est petit, mieux c’est
+# R^2 = coefficient de détermination ∈ [0, 1] => + c’es proche de 1, mieux c’est

@@ -20,7 +20,7 @@ def loss_(y, y_hat):
     if y.ndim != 1 or y_hat.ndim != 1 or y.shape != y_hat.shape:
         return None
     
-    return np.sum((y_hat - y) ** 2) / (2 * y.shape[0])
+    return float(np.sum((y_hat - y) ** 2) / (2 * y.shape[0]))
 
 def main():
     """Tester of my loss function"""

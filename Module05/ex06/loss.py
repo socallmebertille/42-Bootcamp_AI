@@ -20,7 +20,7 @@ def loss_elem_(y, y_hat):
         return None
     if y.ndim != 2 or y_hat.ndim != 2 or y.shape != y_hat.shape:
         return None
-    return (y_hat - y) ** 2
+    return ((y_hat - y) ** 2).astype(float)
 
 def loss_(y, y_hat):
     """
@@ -42,7 +42,7 @@ def loss_(y, y_hat):
         return None
     if y.ndim != 2 or y_hat.ndim != 2 or y.shape != y_hat.shape:
         return None
-    return np.sum(loss_elem_(y, y_hat)) / (2 * y.shape[0])
+    return float(np.sum(loss_elem_(y, y_hat)) / (2 * y.shape[0]))
 
 def predict(x, theta):
     """Computes the vector of prediction y_hat from two non-empty numpy.array.
