@@ -1,8 +1,4 @@
 import numpy as np
-import sys
-sys.path.append("../ex05")
-import predict as p
-
 
 def loss_elem_(y, y_hat):
     """
@@ -48,6 +44,28 @@ def loss_(y, y_hat):
         return None
     return np.sum(loss_elem_(y, y_hat)) / (2 * y.shape[0])
 
+def predict(x, theta):
+    """Computes the vector of prediction y_hat from two non-empty numpy.array.
+    Args:
+        x: has to be an numpy.array, a one-dimensional array of size m.
+        theta: has to be an numpy.array, a two-dimensional array of shape 2 * 1.
+    Returns:
+        y_hat as a numpy.array, a two-dimensional array of shape m * 1.
+        None if x and/or theta are not numpy.array.
+        None if x or theta are empty numpy.array.
+        None if x or theta dimensions are not appropriate.
+    Raises:
+        This function should not raise any Exceptions.
+    """
+    if not isinstance(x, np.ndarray) or not isinstance(theta, np.ndarray):
+        return None
+    if x.size == 0 or theta.size == 0:
+        return None
+    if (x.ndim > 1 and x.shape[1] != 1) or theta.shape != (2,1):
+        return None
+    y_hat = theta[0] + theta[1] * x.reshape(-1, 1)  # reshape x pour avoir m * 1
+    return y_hat.astype(float)
+
 def main():
     """Tester of my loss function"""
 
@@ -55,15 +73,15 @@ def main():
 
     x1 = np.array([[0.], [1.], [2.], [3.], [4.]])
     y1 = np.array([[2.], [7.], [12.], [17.], [22.]])
-    print("x1 array : ", x1)
-    print("y1 array : ", y1)
+    print("x1 array : \n", x1)
+    print("y1 array : \n", y1)
 
     theta1 = np.array([[2.], [4.]])
     print("theta1 : \n", theta1)
-    y_hat1 = p.predict_(x1, theta1)
+    y_hat1 = predict(x1, theta1)
     print("y_hat1 : \n", y_hat1)
 
-    print("loss : ", loss_elem_(y1, y_hat1))
+    print("loss array : \n", loss_elem_(y1, y_hat1))
     print("Expected : array([[0.], [1], [4], [9], [16]])")
 
     print("loss : ", loss_(y1, y_hat1))
@@ -73,12 +91,12 @@ def main():
 
     x2 = np.array([0, 15, -9, 7, 12, 3, -21]).reshape(-1, 1)
     y2 = np.array([2, 14, -13, 5, 12, 4, -19]).reshape(-1, 1)
-    print("x2 array : ", x2)
-    print("y2 array : ", y2)
+    print("x2 array : \n", x2)
+    print("y2 array : \n", y2)
 
     theta2 = np.array(np.array([[0.], [1.]]))
     print("theta2 : \n", theta2)
-    y_hat2 = p.predict_(x2, theta2)
+    y_hat2 = predict(x2, theta2)
     print("y_hat2 : \n", y_hat2)
 
     print("loss : ", loss_(y2, y_hat2))

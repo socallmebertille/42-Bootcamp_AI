@@ -19,13 +19,13 @@ def plot_with_loss(x, y, theta):
     if x.ndim != 1 or y.ndim != 1 or theta.size != 2:
         return
     y_hat = theta[0] + theta[1] * x
-    loss = np.sum((y_hat - y) ** 2) / (2 * y.shape[0])
+    loss = np.sum((y_hat - y) * (y_hat - y)) / (y.shape[0])
     plt.scatter(x, y, color='blue', label='Data points')
     x_line = np.array([x.min(), x.max()])
-    y_line = theta[0][0] + theta[1][0] * x_line
-    plt.plot(x_line, y_line, color="red", label="Prediction line")
-    for xi, yi, yhi in zip(x, y, y_hat): # zip parcourt en parallèle les 3 array
-        plt.plot([xi, xi], [yi, yhi], linestyle='--', color='red', linewidth=1) # coordonnées x (2x le même) et y réel et prédit
+    y_line = theta[0] + theta[1] * x_line
+    plt.plot(x_line, y_line, color='red', label='Prediction line')
+    for i, (xi, yi, yhi) in enumerate(zip(x, y, y_hat)): # zip parcourt en parallèle les 3 array
+        plt.plot([xi, xi], [yi, yhi], linestyle='--', color='red', linewidth=1, label='Loss' if i == 0 else None) # coordonnées x (2x le même) et y réel et prédit
     plt.xlabel("x")
     plt.ylabel("y")
     plt.legend()
