@@ -2,9 +2,29 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_squared_error
 
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+import sys, os#, csv
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ex03.my_linear_regression import MyLinearRegression as MyLR
+
+# def read_csv(file):
+#     """
+#     Description:
+#         Read a CSV file and return its content as a list of lists.
+#     Returns:
+#         data: numpy.ndarray, a matrix of dimension m * n.
+#         None if file is empty.
+#     """
+
+#     data = []
+#     try:
+#         with open(file, "r", encoding="utf-8") as f:
+#             lecteur = csv.reader(f, delimiter=", ")  # ou ";" selon ton fichier
+#             for ligne in lecteur:
+#                 data.append(ligne)
+#         return np.array(data)
+#     except FileNotFoundError:
+#         print(f"Error : the file {file} doesnot exist.")
+#         return None
 
 def main():
     """Tester of my functions of precision indicator"""
@@ -35,3 +55,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Patient: number of the patient.
+# Micrograms: quantity of blue pills patient has taken (in micrograms).
+# Score: Standardized score at the spacecraft driving test.
