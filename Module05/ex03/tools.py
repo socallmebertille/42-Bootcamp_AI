@@ -13,7 +13,7 @@ def add_intercept(x):
     """
     if not isinstance(x, np.ndarray) or x.size == 0:
         return None
-    if x.ndim == 1:
+    if x.ndim == 1 or (x.ndim == 2 and x.shape[1] == 1):
         x = x.reshape(-1, 1) # dim(m,n) -> m = -1 => NumPy will calculate this number for you
     ones = np.ones((x.shape[0], 1)) # mat_of_1((m,n)) -> coloumn of 1s of x_nb_line
     return np.concatenate((ones, x), axis=1) # axis = 1 => concat horizontalement (0 => vert. / None => tout sur une ligne)

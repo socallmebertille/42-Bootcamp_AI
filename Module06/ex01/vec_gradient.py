@@ -22,12 +22,15 @@ def gradient(x, y, theta):
         return None
     if x.size == 0 or y.size == 0 or theta.size == 0:
         return None
-    if (x.ndim != 1 and x.shape[1] > 1) or (y.ndim != 1 and y.shape[1] > 1):
+    if x.ndim > 2 or (x.ndim == 2 and x.shape[1] != 1):
+        return None
+    if y.ndim > 2 or (y.ndim == 2 and y.shape[1] != 1):
         return None
     if x.shape != y.shape or theta.shape != (2,1):
         return None
-    X = add_intercept(x.reshape(-1))  # add_intercept attend 1D
-    return (X.T @ (X @ theta - y)) / x.shape[0]
+    y = y.reshape(-1, 1)
+    X = add_intercept(x)
+    return (X.T @ (X @ theta - y)) / y.shape[0]
 
 def main():
     """Tester of my gradient vector function optimized"""
