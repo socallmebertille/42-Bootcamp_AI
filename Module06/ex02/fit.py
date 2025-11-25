@@ -25,7 +25,7 @@ def fit_(x, y, theta, alpha, max_iter):
         return None
     if x.size == 0 or y.size == 0 or theta.size == 0:
         return None
-    if x.ndim < 1 or y.ndim < 1 or x.shape != y.shape or theta.shape != (2,1):
+    if x.shape != y.shape or theta.shape != (2,1):
         return None
     new_theta = theta.copy()
     for _ in range(max_iter):
