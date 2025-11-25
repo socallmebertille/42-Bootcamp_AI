@@ -39,7 +39,7 @@ def simple_gradient(x, y, theta):
     return np.concatenate(([grad_0], [grad_1]), axis=0)
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my gradient vector function"""
 
     print("============= TEST ===================")
 

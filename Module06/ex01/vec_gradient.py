@@ -1,5 +1,9 @@
 import numpy as np
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from Module05.ex03.tools import add_intercept
+
 def gradient(x, y, theta):
     """Computes a gradient vector from three non-empty numpy.arrays, without any for loop.
     The three arrays must have compatible shapes.
@@ -18,29 +22,32 @@ def gradient(x, y, theta):
         return None
     if x.size == 0 or y.size == 0 or theta.size == 0:
         return None
-    if x.ndim < 1 or y.ndim < 1 or x.shape != y.shape or theta.shape != (2,1):
+    if (x.ndim != 1 and x.shape[1] > 1) or (y.ndim != 1 and y.shape[1] > 1):
         return None
-    return 
+    if x.shape != y.shape or theta.shape != (2,1):
+        return None
+    X = add_intercept(x.reshape(-1))  # add_intercept attend 1D
+    return (X.T @ (X @ theta - y)) / x.shape[0]
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my gradient vector function optimized"""
 
     print("============= TEST ===================")
 
     x = np.array([12.4956442, 21.5007972, 31.5527382, 48.9145838, 57.5088733]).reshape((-1, 1))
     y = np.array([37.4013816, 36.1473236, 45.7655287, 46.6793434, 59.5585554]).reshape((-1, 1))
 
-    print("x array : ", x)
-    print("y array : ", y)
+    print("x array : \n", x)
+    print("y array : \n", y)
 
     theta1 = np.array([2, 0.7]).reshape((-1, 1))
     print("theta1 : \n", theta1)
-    print("gradient : ", gradient(x, y, theta1) )
+    print("gradient : \n", gradient(x, y, theta1) )
     print("Expected : array([[-19.0342574], [-586.66875564]])")
 
     theta2 = np.array([1, -0.4]).reshape((-1, 1))
     print("theta2 : \n", theta2)
-    print("gradient : ", gradient(x, y, theta2) )
+    print("gradient : \n", gradient(x, y, theta2) )
     print("Expected : array([[-57.86823748], [-2230.12297889]])")
 
     return 0
