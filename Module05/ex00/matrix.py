@@ -128,7 +128,7 @@ class Vector(Matrix):
             raise ValueError("Vector must be a row or column")
         super().__init__(data) # super -> pour appeler une méthode de la classe parente depuis une class enfant
 
-    def dot(self, v: "Vector"): # dot product = produit scaaire en maths
+    def dot(self, v: "Vector"): # dot product = produit scalaire en maths
         if self.shape != v.shape:
             raise ValueError("Vectors must have same shape")
         return sum(self.data[i][0] * v.data[i][0] for i in range(self.shape[0]))

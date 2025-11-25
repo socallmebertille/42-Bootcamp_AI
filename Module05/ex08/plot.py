@@ -19,7 +19,7 @@ def plot_with_loss(x, y, theta):
     if x.ndim != 1 or y.ndim != 1 or theta.size != 2:
         return
     y_hat = theta[0] + theta[1] * x
-    loss = np.sum((y_hat - y) * (y_hat - y)) / (y.shape[0])
+    loss = np.sum((y_hat - y) * (y_hat - y)) / (y.shape[0]) # usually \ by 2 but examples result show differently
     plt.scatter(x, y, color='blue', label='Data points')
     x_line = np.array([x.min(), x.max()])
     y_line = theta[0] + theta[1] * x_line

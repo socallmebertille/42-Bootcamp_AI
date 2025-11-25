@@ -1,5 +1,9 @@
 import numpy as np
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from ex03.tools import add_intercept
+
 def predict_(x, theta):
     """Computes the vector of prediction y_hat from two non-empty numpy.array.
     Args:
@@ -19,9 +23,8 @@ def predict_(x, theta):
         return None
     if x.ndim != 1 or theta.shape != (2,1):
         return None
-    y_hat = theta[0] + theta[1] * x.reshape(-1, 1)  # reshape x pour avoir m * 1
+    y_hat = add_intercept(x) @ theta # matrix multiplication operator @ => permet le produit matriciel
     return y_hat.astype(float)
-
 
 def main():
     """Tester of my predict function"""
