@@ -1,5 +1,10 @@
 import numpy as np
-from my_linear_regression import MyLinearRegression as MyLR
+# from my_linear_regression import MyLinearRegression as MyLR
+
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from Module05.ex06.loss import predict, loss_, loss_elem_
+from Module06.ex02.fit import fit_
 
 class MyLinearRegression():
     """
@@ -12,16 +17,19 @@ class MyLinearRegression():
         self.thetas = thetas
     
     def fit_(self, x, y):
-        return
+        new_theta = fit_(x, y, self.thetas, self.alpha, self.max_iter)
+        if new_theta is not None:
+            self.thetas = new_theta
+        return self.thetas
     
     def predict_(self, x):
-        return
+        return predict(x, self.thetas)
     
     def loss_elem_(self, y, y_hat):
-        return 
+        return loss_elem_(y, y_hat)
     
     def loss_(self, y, y_hat):
-        return
+        return loss_(y, y_hat)
 
 def main():
     """Tester of my functions of precision indicator"""
@@ -31,10 +39,12 @@ def main():
     x = np.array([[12.4956442], [21.5007972], [31.5527382], [48.9145838], [57.5088733]])
     y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
 
-    print("x array : ", x)
-    print("y array : ", y)
+    print("x array : \n", x)
+    print("y array : \n", y)
 
-    lr1 = MyLR(np.array([[2], [0.7]]))
+    print("============= 1 ===================")
+
+    lr1 = MyLinearRegression(np.array([[2], [0.7]]))
     y_hat = lr1.predict_(x)
     print("y_hat predict : \n", y_hat)
     print("Expected : array([[10.74695094],\n\t\t[17.05055804],\n\t\t[24.08691674],\n\t\t[36.24020866],\n\t\t[42.25621131]])")
@@ -45,7 +55,9 @@ def main():
     print("loss :\n", lr1.loss_(y, y_hat))
     print("Expected : 195.34539903032385")
 
-    lr2 = MyLR(np.array([[1], [1]]), 5e-8, 1500000)
+    print("============= 2 ===================")
+
+    lr2 = MyLinearRegression(np.array([[1], [1]]), 5e-8, 1500000)
     lr2.fit_(x, y)
     print("thetas : \n", lr2.thetas)
     print("Expected : array([[1.40709365],\n\t\t[1.1150909 ]])")

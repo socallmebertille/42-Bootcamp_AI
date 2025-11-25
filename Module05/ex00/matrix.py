@@ -133,7 +133,6 @@ class Vector(Matrix):
             raise ValueError("Vectors must have same shape")
         return sum(self.data[i][0] * v.data[i][0] for i in range(self.shape[0]))
 
-
 # Interpretation produit scalaire :
 # > 0 → ils vont globalement dans la même direction
 # < 0 → opposés

@@ -33,10 +33,10 @@ def fit_(x, y, theta, alpha, max_iter):
         if grad is None:
             return None
         new_theta = new_theta - alpha * grad
-    return new_theta
+    return new_theta.astype(float)
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my basic gradient descent algo"""
 
     print("============= TEST ===================")
 
