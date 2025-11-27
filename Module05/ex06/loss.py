@@ -28,12 +28,7 @@ def loss_(y, y_hat):
         Calculates the value of loss function.
     Args:
         y: has to be an numpy.array, a two-dimensional array of shape m * 1.
-        y_hat: has to    main()
-
-# MSE = Erreur moyenne au carré => prédictions sont loin des vraies valeurs si MSE loin de 0
-# RMSE = MSE ramené à l’unité originale => de meme, + proche de 0 + precis
-# MAE = Erreur moyenne en valeur absolue => + c’est petit, mieux c’est
-# R^2 = coefficient de détermination ∈ [0, 1] => + c’es proche de 1, mieux c’est be an numpy.array, a two-dimensional array of shape m * 1.
+        y_hat: has to be an numpy.array, a two-dimensional array of shape m * 1.
     Returns:
         J_value : has to be a float.
         None if there is a dimension matching problem.
