@@ -39,7 +39,9 @@ def main():
         models[degree] = {                                                  # step 7 : save model
             'theta': lr.thetas,
             'mean': mean,
-            'std': std
+            'std': std,
+            'mse_train': float(mse_train),
+            'mse_test': float(mse_test)
         }
         print(f"Degree {degree} → Train MSE = {mse_train:.2f}, Test MSE = {mse_test:.2f}")
 
