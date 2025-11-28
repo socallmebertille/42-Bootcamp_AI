@@ -14,10 +14,15 @@ def minmax(x):
         return None
     if x.size == 0:
         return None
-    if x.ndim < 1:
+    if x.ndim != 2 or x.shape[1] != 1:
         return None
     x_flat = x.reshape(-1)
-    return (x_flat - np.min(x_flat)) / (np.max(x_flat) - np.min(x_flat))
+    min_val = np.min(x_flat)
+    max_val = np.max(x_flat)
+    if max_val - min_val == 0:
+        return None
+    res = (x_flat - min_val) / (max_val - min_val)
+    return res.reshape(x.shape)
 
 def main():
     """Tester of my functions of precision indicator"""
