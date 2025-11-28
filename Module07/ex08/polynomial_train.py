@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../Module06/ex05'))  # Pour zscore
 from ex05.mylinearregression import MyLinearRegression as MyLR
 from ex07.polynomial_model import add_polynomial_features
+from zscore import zscore  # ou from minmax import minmax
 
 
 def main():
@@ -22,77 +24,75 @@ def main():
     Xpill = np.array(data["Micrograms"]).reshape(-1, 1)
     Yscore = np.array(data["Score"]).reshape(-1, 1)
 
-    theta4 = np.array([[-20],[160],[-80],[10],[-1]], dtype=float)
-    theta5 = np.array([[1140],[-1850],[1110],[-305],[40],[-2]], dtype=float)
-    theta6 = np.array([[9110],[-18015],[13400],[-4935],[966],[-96.4],[3.86]], dtype=float)
-
-    initial_thetas = {
-        1: np.ones((2,1)),
-        2: np.ones((3,1)),
-        3: np.ones((4,1)),
-        4: theta4,
-        5: theta5,
-        6: theta6
-    }
-
-    alphas = {
-        1: 5e-4,
-        2: 1e-4,
-        3: 5e-6,
-        4: 1e-6,
-        5: 5e-8,
-        6: 1e-9
-    }
-
-    max_iters = {
-        1: 100000,
-        2: 150000,
-        3: 200000,
-        4: 300000,
-        5: 400000,
-        6: 500000
-    }
-
     models = {}
     mse_scores = {}
+    
+    # Paramètres simplifiés grâce à la normalisation
+    alpha = 1e-3  # UN SEUL alpha pour tous !
+    max_iter = 100000
+    
     for degree in range(1, 7):
         print(f"\n=== Training degree {degree} ===")
-        X_poly = add_polynomial_features(Xpill, degree)
-        theta = initial_thetas[degree]
         
-        lr = MyLR(theta, alpha=alphas[degree], max_iter=max_iters[degree])
-        lr.fit_(X_poly, Yscore)
+        # Créer features polynomiales
+        X_poly = add_polynomial_features(Xpill, degree)
+        
+        # NORMALISER avant l'entraînement
+        X_poly_norm = zscore(X_poly)  # ou minmax(X_poly)
+        
+        # Theta initial simple
+        theta = np.ones((degree + 1, 1))
+        
+        # Entraînement
+        lr = MyLR(theta, alpha=alpha, max_iter=max_iter)
+        lr.fit_(X_poly_norm, Yscore)
+        
+        # Prédiction et MSE
+        y_pred = lr.predict_(X_poly_norm)
+        mse = lr.mse(y_pred, Yscore)
         
         models[degree] = lr
-        y_pred = lr.predict_(X_poly)
-        mse = lr.mse(y_pred, Yscore)
         mse_scores[degree] = mse
         print(f"Degree {degree} → MSE = {mse:.2f}")
 
     # Bar plot of MSE
     plt.figure(figsize=(10, 6))
-    plt.bar(list(mse_scores.keys()), list(mse_scores.values()), color='skyblue')
+    plt.bar(list(mse_scores.keys()), list(mse_scores.values()), 
+            color='skyblue', edgecolor='black')
     plt.xlabel("Polynomial Degree")
     plt.ylabel("MSE")
-    plt.title("MSE of polynomial models of different degrees")
-    plt.grid(True, linestyle="--", alpha=0.4)
+    plt.yscale('log')  # Échelle log pour mieux voir
+    plt.title("MSE of polynomial models (with normalization)")
+    plt.grid(True, linestyle="--", alpha=0.4, axis='y')
     for degree, mse in mse_scores.items():
-        plt.text(degree, mse, f'{mse:.2f}', ha='center', va='bottom')
+        plt.text(degree, mse, f'{mse:.1f}', ha='center', va='bottom', fontsize=9)
+    plt.tight_layout()
     plt.show()
 
     # Plot the 6 models on top of the data
-    plt.figure(figsize=(10, 6))
-    plt.scatter(Xpill, Yscore, color='black', label="Data")
+    plt.figure(figsize=(12, 7))
+    plt.scatter(Xpill, Yscore, color='black', label="Data", s=50, alpha=0.7, zorder=5)
+    
     continuous_x = np.arange(Xpill.min(), Xpill.max(), 0.01).reshape(-1, 1)
+    colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'orange']
+    
     for degree in range(1, 7):
+        # Créer et normaliser les features continues
         X_poly_cont = add_polynomial_features(continuous_x, degree)
-        y_hat = models[degree].predict_(X_poly_cont)
-        plt.plot(continuous_x, y_hat, label=f"Degree {degree}")
-    plt.xlabel("Micrograms")
-    plt.ylabel("Score")
-    plt.title("Polynomial models vs data")
-    plt.legend()
+        X_poly_cont_norm = zscore(X_poly_cont)  # ou minmax(X_poly_cont)
+        
+        # Prédire
+        y_hat = models[degree].predict_(X_poly_cont_norm)
+        
+        plt.plot(continuous_x, y_hat, label=f"Degree {degree}", 
+                color=colors[degree-1], linewidth=2)
+    
+    plt.xlabel("Micrograms", fontsize=12)
+    plt.ylabel("Score", fontsize=12)
+    plt.title("Polynomial models vs data (with normalization)", fontsize=14, fontweight='bold')
+    plt.legend(loc='best')
     plt.grid(True, linestyle="--", alpha=0.4)
+    plt.tight_layout()
     plt.show()
 
     return 0
@@ -100,8 +100,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# trouver les bons alpha pour chaque degré
-# si MSE = nan ou tres grand, diminuer alpha de /10 ou + chaque degre
-# sinon on normalise les X avant d'entrainer le modèle
-
