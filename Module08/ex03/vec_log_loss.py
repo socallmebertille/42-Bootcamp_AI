@@ -25,7 +25,9 @@ def vec_log_loss_(y, y_hat, eps=1e-15):
         return None
     if y.shape[1] != 1 or y_hat.shape[1] != 1 or y.shape[0] != y_hat.shape[0]:
         return None
-    return 
+    m = y.shape[0]
+    one_vec = np.ones(y.shape)
+    return - (1 / m) * (y.T @ (np.log(y_hat + eps)) + (one_vec - y).T @ (np.log(one_vec - y_hat + eps)))
 
 def main():
     """Tester of my loss function"""
