@@ -28,9 +28,10 @@ def gradient(x, y, theta):
         return None
     if theta.shape[1] != 1 or y.shape[1] != 1 or x.shape[1] + 1 != theta.shape[0] or x.shape[0] != y.shape[0]:
         return None
-    y = y.reshape(-1, 1)
-    X = add_intercept(x)
-    return (X.T @ (X @ theta - y)) / y.shape[0]
+    m = x.shape[0]
+    X_prime = np.hstack([np.ones((m, 1)), x])
+    gradient = (X_prime.T @ (X_prime @ theta - y)) / m
+    return gradient
 
 def main():
     """Tester of my gradient function"""
