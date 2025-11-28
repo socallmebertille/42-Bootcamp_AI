@@ -5,7 +5,7 @@ import numpy as np
 from my_linear_regression import MyLinearRegression as MyLR
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my linear regression program model"""
     print("============= TEST ===================")
     data = pd.read_csv("/home/sarah/bootcamp_ML/Module06/ex04/are_blue_pills_magics.csv")
     Xpill = np.array(data['Micrograms']).reshape(-1,1)

@@ -25,21 +25,21 @@ def zscore(x):
     return z.reshape(x.shape)
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my z-score normalize function"""
 
     print("============= TEST ===================")
 
     X = np.array([0, 15, -9, 7, 12, 3, -21])
 
-    print("x array : ", X)
+    print("x array : \n", X)
 
-    print("zscore : ", zscore(X))
+    print("zscore : \n", zscore(X))
     print("Expected : array([-0.08620324, 1.2068453 , -0.86203236, 0.51721942, 0.94823559, 0.17240647, -1.89647119])")
 
     Y = np.array([2, 14, -13, 5, 12, 4, -19]).reshape((-1, 1))
-    print("y array : ", Y)
+    print("y array : \n", Y)
 
-    print("zscore : ", zscore(Y) )
+    print("zscore : \n", zscore(Y) )
     print("Expected : array([ 0.11267619, 1.16432067, -1.20187941, 0.37558731, 0.98904659, 0.28795027, -1.72770165])")
 
     return 0
