@@ -16,7 +16,13 @@ def zscore(x):
         return None
     if x.ndim < 1:
         return None
-    return 
+    x_flat = x.reshape(-1)
+    mu = np.mean(x_flat)
+    sigma = np.std(x_flat)
+    if sigma == 0:
+        return None
+    z = (x_flat - mu) / sigma
+    return z.reshape(x.shape)
 
 def main():
     """Tester of my functions of precision indicator"""
