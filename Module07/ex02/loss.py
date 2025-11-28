@@ -1,5 +1,28 @@
 import numpy as np
 
+def loss_elem_(y, y_hat):
+    """Computes the squared differences of two non-empty numpy.array, element by element.
+    Args:
+        y: has to be an numpy.array, a vector.
+        y_hat: has to be an numpy.array, a vector.
+    Return:
+        J_elem: numpy.array, a vector of dimension (number of the training examples,1).
+        None if y or y_hat are empty numpy.array.
+        None if y and y_hat does not share the same dimensions.
+        None if y or y_hat is not of expected type.
+    Raises:
+        This function should not raise any Exception.
+    """
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.size == 0 or y_hat.size == 0:
+        return None
+    if y.ndim != 2 or y_hat.ndim != 2:
+        return None
+    if y.shape != y_hat.shape:
+        return None
+    return (y_hat - y) ** 2
+
 def loss_(y, y_hat):
     """Computes the mean squared error of two non-empty numpy.array, without any for loop.
     The two arrays must have the same dimensions.
@@ -20,7 +43,7 @@ def loss_(y, y_hat):
         return None
     if y.ndim != 2 or y_hat.ndim != 2 or y.shape != y_hat.shape:
         return None
-    return float(np.sum((y_hat - y) ** 2) / (2 * y.shape[0]))
+    return float(np.sum(loss_elem_(y, y_hat)) / (2 * y.shape[0]))
 
 def main():
     """Tester of my loss function"""
