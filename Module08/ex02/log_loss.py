@@ -24,7 +24,7 @@ def log_loss_elem_(y, y_hat, eps=1e-15):
         return None
     if y.shape != y_hat.shape:
         return None
-    return y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
+    return (y * np.log(y_hat + eps)) + ((1 - y) * np.log(1 - y_hat + eps))
 
 def log_loss_(y, y_hat, eps=1e-15):
     """Computes the logistic loss value.
