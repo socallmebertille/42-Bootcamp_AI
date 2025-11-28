@@ -93,3 +93,9 @@ if __name__ == "__main__":
 # ce biais et appele l'overfitting (sur-apprentissage) ou le bruit
 # on veut eviter que le modele apprenne par coeur les donnees d'entrainement
 # et qu'il soit incapable de generaliser sur des donnees qu'il n'a jamais vues
+
+# l'underifting (sous-apprentissage) est l'inverse
+# le modele est trop simple pour capturer les tendances des donnees, meme sur les donnees d'entrainement
+# il n'apprend rien d'utile
+# SOLUTION :
+# + de features => degre polynomiale plus eleve
