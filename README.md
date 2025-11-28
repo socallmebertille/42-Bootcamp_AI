@@ -114,6 +114,8 @@ MSE
      Underfitting    Optimal   Overfitting
 ```
 
+---
+
 #### 🛠️ Essential Techniques
 
 1. **Polynomial Features**
@@ -151,6 +153,8 @@ X_norm = (X - μ) / σ
 | **RMSE** | `√MSE` | Same unit as Y |
 | **MAE** | `1/m · Σ|ŷ - y|` | Mean Absolute Error |
 | **R²** | `1 - (SS_res/SS_tot)` | % variance explained (0-1) |
+
+---
 
 #### 💻 Code Structure
 
