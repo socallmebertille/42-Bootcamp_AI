@@ -46,3 +46,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# La formule standard du min-max scaling est utilisée partout en data science
+# et transforme les valeurs normalisées dans l’intervalle [0, 1]
