@@ -28,7 +28,7 @@ def vec_log_loss_(y, y_hat, eps=1e-15):
     return 
 
 def main():
-    """Tester of my gradient function"""
+    """Tester of my loss function"""
 
     print("============= TEST  ===================")
 
@@ -48,7 +48,6 @@ def main():
     x2 = np.array([[4], [7.16], [3.2], [9.37], [0.56]])
     theta2 = np.array([[2], [0.5]])
     y_hat2 = logistic_predict_(x2, theta2)
-    theta2 = np.array([[2], [0.5]])
     print("x array : \n", x2)
     print("theta : \n", theta2)
     print("predict : \n", y_hat2)
@@ -60,7 +59,6 @@ def main():
     x3 = np.array([[0, 2, 3, 4], [2, 4, 5, 5], [1, 3, 2, 7]])
     theta3 = np.array([[-2.4], [-1.5], [0.3], [-1.4], [0.7]])
     y_hat3 = logistic_predict_(x3, theta3)
-    theta3 = np.array([[-2.4], [-1.5], [0.3], [-1.4], [0.7]])
     print("x array : \n", x3)
     print("theta : \n", theta3)
     print("predict : \n", y_hat3)
