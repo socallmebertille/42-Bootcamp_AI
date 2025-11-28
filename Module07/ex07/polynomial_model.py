@@ -15,12 +15,14 @@ def add_polynomial_features(x, power):
     """
     if not isinstance(x, np.ndarray) or not isinstance(power, int):
         return None
-    if x.size == 0 or y <= 0:
+    if x.size == 0 or power <= 0:
         return None
-    if x.ndim != 1:
+    if x.ndim != 2 or x.shape[1] != 1:
         return None
-    
-    return 
+    x_flat = x.reshape(-1) # x en colonne
+    cols = [x_flat ** p for p in range(1, power + 1)]  # range(start, stop)
+    return np.vstack(cols).T # vstack = empile verticalement (plus de lignes)
+
 
 def main():
     """Tester of my loss function"""
