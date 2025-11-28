@@ -15,6 +15,7 @@
   <li class="my-0"><a href="#overview">Overview</a></li>
   <ul class="list-disc pl-4 my-0">
     <li class="my-0"><a href="#multivariate-linear-regression">Multivariate Linear Regression</a></li>
+    <li class="my-0"><a href="#logistic-regression">Logistic Regression</a></li>
   </ul>
 </ul>
 
@@ -180,4 +181,14 @@ mse = lr.mse(y_pred, Ytest)
 ```
 
 > 💡 **Tip:** Always normalize X (not Y), always split train/test, always compare train/test MSE to detect overfitting!
+
+---
+
+### Logistic Regression
+
+> **Objective:** Predict a category/label/cass variable with a classification algorithm.
+
+---
+
+#### 🎯 Key Concepts
 
