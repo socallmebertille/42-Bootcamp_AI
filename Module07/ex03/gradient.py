@@ -1,9 +1,5 @@
 import numpy as np
 
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-from Module05.ex03.tools import add_intercept
-
 def gradient(x, y, theta):
     """Computes a gradient vector from three non-empty numpy.array, without any for-loop.
     The three arrays must have the compatible dimensions.
@@ -30,7 +26,7 @@ def gradient(x, y, theta):
         return None
     m = x.shape[0]
     X_prime = np.hstack([np.ones((m, 1)), x])
-    gradient = (X_prime.T @ (X_prime @ theta - y)) / m
+    gradient = (X_prime.T @ (X_prime @ theta - y)) / m # .T => attribut de np pour la transposee
     return gradient
 
 def main():
@@ -64,6 +60,7 @@ def main():
     print("theta2: \n", theta2)
     print("gradient : \n", gradient(x, y, theta2))
     print("Expected : array([[ -0.71428571], [ 0.85714286], [23.28571429], [-26.42857143]])")
+
     return 0
 
 if __name__ == "__main__":
