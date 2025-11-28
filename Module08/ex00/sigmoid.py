@@ -14,9 +14,9 @@ def sigmoid_(x):
         return None
     if x.size == 0:
         return None
-    if x.ndim != 2:
+    if x.ndim != 2 or x.shape[1] != 1:
         return None
-    return 
+    return 1 / (1 + np.exp(-x))
 
 def main():
     """Tester of my sigmoid function"""
