@@ -93,3 +93,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# epsilon sert à éviter log(0) qui est indéfini
+# on ajoute une petite valeur eps aux arguments de log pour éviter ce cas
