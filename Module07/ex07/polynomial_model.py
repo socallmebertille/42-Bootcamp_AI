@@ -20,7 +20,7 @@ def add_polynomial_features(x, power):
     return np.hstack([x ** p for p in range(1, power + 1)]) # hstack = empile horizontalement (plus de colonnes)
 
 def main():
-    """Tester of my loss function"""
+    """Tester of my polynomial function"""
 
     print("============= TEST ===================")
 
@@ -37,3 +37,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# feature polynomiale = feature originale élevée à une puissance
