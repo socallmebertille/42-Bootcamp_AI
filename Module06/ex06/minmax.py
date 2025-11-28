@@ -16,7 +16,8 @@ def minmax(x):
         return None
     if x.ndim < 1:
         return None
-    return 
+    x_flat = x.reshape(-1)
+    return (x_flat - np.min(x_flat)) / (np.max(x_flat) - np.min(x_flat))
 
 def main():
     """Tester of my functions of precision indicator"""

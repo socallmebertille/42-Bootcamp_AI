@@ -46,3 +46,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# La normalisation z-score transforme les données de sorte que :
+#   - la moyenne devient 0
+#   - l’écart-type devient 1
