@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sklearn.metrics import mean_squared_error
+# from sklearn.metrics import mean_squared_error
 
 from my_linear_regression import MyLinearRegression as MyLR
 
@@ -30,26 +30,26 @@ def main():
     xlabel = "Quantity of blue pill (in micrograms)"
     ylabel = "Space driving score"
     
-    linear_model1.plot_data(Xpill, Yscore, True, 
+    linear_model1.plot_data(Xpill, Yscore, False, 
                             "Model 1: θ0=89, θ1=-8", xlabel, ylabel)
-    linear_model2.plot_data(Xpill, Yscore, True, 
+    linear_model2.plot_data(Xpill, Yscore, False, 
                             "Model 2: θ0=89, θ1=-6", xlabel, ylabel)
-    linear_model_trained.plot_data(Xpill, Yscore, True, 
+    linear_model_trained.plot_data(Xpill, Yscore, False, 
                                    "Trained Model", xlabel, ylabel)
     
-    linear_model1.plot_loss(Xpill, Yscore)
+    linear_model_trained.plot_loss(Xpill, Yscore, 10.0)
     
     # MSE
     print("\nMSE Model 1:", MyLR.mse(Yscore, Y_model1))
     print("Expected : 57.60304285714282")
-    print("sklearn:", mean_squared_error(Yscore, Y_model1))
+    # print("sklearn:", mean_squared_error(Yscore, Y_model1))
     
     print("\nMSE Model 2:", MyLR.mse(Yscore, Y_model2))
     print("Expected : 232.16344285714285")
-    print("sklearn:", mean_squared_error(Yscore, Y_model2))
+    # print("sklearn:", mean_squared_error(Yscore, Y_model2))
     
     print("\nMSE Trained Model:", MyLR.mse(Yscore, Y_model_trained))
-    print("sklearn:", mean_squared_error(Yscore, Y_model_trained))
+    # print("sklearn:", mean_squared_error(Yscore, Y_model_trained))
     
     return 0
 

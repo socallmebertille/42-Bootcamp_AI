@@ -51,7 +51,7 @@ class MyLinearRegression():
         plt.plot(x_line, y_line, color='lightgreen', label='Prediction')
         if loss == True:
             for i, (xi, yi, yhi) in enumerate(zip(x, y, y_hat)): # zip parcourt en parallèle les 3 array
-                plt.plot([xi, xi], [yi, yhi], linestyle='--', color='plum', linewidth=1, label='Loss' if i == 0 else None) # coordonnées x (2x le même) et y réel et prédit
+                plt.plot([xi, xi], [yi, yhi], linestyle='--', color='red', linewidth=1, label='Loss' if i == 0 else None) # coordonnées x (2x le même) et y réel et prédit
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title)
@@ -59,7 +59,7 @@ class MyLinearRegression():
         plt.grid(True)
         plt.show()
     
-    def plot_loss(self, x, y):
+    def plot_loss(self, x, y, precision: float):
         if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray):
             return
         if x.size == 0 or y.size == 0:
@@ -67,9 +67,8 @@ class MyLinearRegression():
         if x.ndim != 2 or y.ndim != 2:
             return
         
-        theta0_list = np.linspace(-20, 100, 6)   # 6 valeurs comme dans le sujet
+        theta0_list = np.linspace(self.thetas[0][0] - precision, self.thetas[0][0] + precision, 6)   # 6 val de theta0 espacées également de -20 à 100
         theta1_range = np.linspace(-14, -4, 200)
-        plt.figure(figsize=(7,5))
         for t0 in theta0_list:
             losses = []
             for t1 in theta1_range:
@@ -77,7 +76,7 @@ class MyLinearRegression():
                 y_hat = predict(x, tmp_thetas)
                 loss = self.mse(y, y_hat)
                 losses.append(loss)
-            plt.plot(theta1_range, losses, label=f"θ0={t0:.1f}")
+            plt.plot(theta1_range, losses, label=f"J(θ0={t0:.1f}, θ1)")
         plt.xlabel("θ1")
         plt.ylabel("cost function J(θ0, θ1)")
         plt.title("Loss evolution for different values of θ0")

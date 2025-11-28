@@ -63,8 +63,8 @@ def predict(x, theta):
         return None
     if (x.ndim > 1 and x.shape[1] != 1) or theta.shape != (2,1):
         return None
-    y_hat = theta[0] + theta[1] * x.reshape(-1, 1)  # reshape x pour avoir m * 1
-    return y_hat.astype(float)
+    x = x.reshape(-1, 1)  # reshape x pour avoir m * 1
+    return (theta[0] + theta[1] * x).astype(float)
 
 def main():
     """Tester of my loss function"""
