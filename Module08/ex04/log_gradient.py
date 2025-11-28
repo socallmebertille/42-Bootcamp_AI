@@ -2,8 +2,8 @@ import numpy as np
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ex01.log_pred import predict_
-from ex03.vec_log_loss import gradient
+from ex01.log_pred import logistic_predict_
+from ex00.sigmoid import sigmoid_
 
 def log_gradient(x, y, theta):
     """Computes a gradient vector from three non-empty numpy.ndarray, with a for-loop. The three arrays must have compatibl
@@ -20,15 +20,19 @@ def log_gradient(x, y, theta):
     """
     if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(theta, np.ndarray):
         return None
-    if not isinstance(alpha, (int, float)) or not isinstance(max_iter, int):
-        return None
     if x.size == 0 or y.size == 0 or theta.size == 0:
         return None
     if x.ndim != 2 or y.ndim != 2 or theta.ndim != 2:
         return None
     if theta.shape[1] != 1 or y.shape[1] != 1 or x.shape[1] + 1 != theta.shape[0] or x.shape[0] != y.shape[0]:
         return None
-    return 
+    m = x.shape[0]
+    y_hat = logistic_predict_(x, theta)
+    grad = np.zeros((theta.shape[0], 1))
+    for j in range(grad.shape[0]):
+        # x_ij = 1 if j == 0 else x[i][j - 1]
+        grad[j] = (1 / m) * np.sum((y_hat - y) * (np.ones((m, 1)) if j == 0 else x[:, j - 1].reshape(-1, 1)))
+    return grad
 
 def main():
     """Tester of my gradient function"""
