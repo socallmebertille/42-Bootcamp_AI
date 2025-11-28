@@ -2,7 +2,7 @@ import numpy as np
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ex03.tools import add_intercept
+from Module07.ex03.gradient import add_intercept
 
 def predict_(x, theta):
     """Computes the vector of prediction y_hat from two non-empty numpy.array.
