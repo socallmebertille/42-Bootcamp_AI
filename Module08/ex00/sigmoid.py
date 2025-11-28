@@ -45,3 +45,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# BUT de la fonction sigmoid :
+# lie l'output du modele de regression lineaire a une probabilite ∈ [0, 1]
+# permet de faire de la classification binaire
+# comme pour repondre a une question rhetorique : oui/non, vrai/faux, 0/1
