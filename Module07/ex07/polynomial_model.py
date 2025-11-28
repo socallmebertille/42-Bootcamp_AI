@@ -13,16 +13,11 @@ def add_polynomial_features(x, power):
     Raises:
         This function should not raise any Exception.
     """
-    if not isinstance(x, np.ndarray) or not isinstance(power, int):
+    if not isinstance(x, np.ndarray) or x.ndim != 2 or x.shape[1] != 1:
         return None
-    if x.size == 0 or power <= 0:
+    if not isinstance(power, int) or power < 1:
         return None
-    if x.ndim != 2 or x.shape[1] != 1:
-        return None
-    x_flat = x.reshape(-1) # x en colonne
-    cols = [x_flat ** p for p in range(1, power + 1)]  # range(start, stop)
-    return np.vstack(cols).T # vstack = empile verticalement (plus de lignes)
-
+    return np.hstack([x ** p for p in range(1, power + 1)]) # hstack = empile horizontalement (plus de colonnes)
 
 def main():
     """Tester of my loss function"""
