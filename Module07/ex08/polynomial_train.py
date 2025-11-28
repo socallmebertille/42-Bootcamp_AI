@@ -50,7 +50,7 @@ def main():
     plt.grid(True, linestyle="--", alpha=0.4, axis='y')
     for degree, mse in mse_scores.items():
         plt.text(degree, mse, f'{mse:.1f}', ha='center', va='bottom', fontsize=9)
-    plt.tight_layout()
+    # plt.tight_layout()
     plt.show()
 
     # Plot the 6 models on top of the data
