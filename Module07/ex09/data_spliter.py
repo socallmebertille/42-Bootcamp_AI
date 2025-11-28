@@ -44,7 +44,7 @@ def data_spliter(x, y, proportion):
     return x_train, x_test, y_train, y_test
 
 def main():
-    """Tester of my functions of precision indicator"""
+    """Tester of my splitter of data function"""
 
     print("============= TEST ===================")
 
