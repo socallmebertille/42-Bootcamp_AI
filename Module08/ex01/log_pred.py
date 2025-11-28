@@ -20,7 +20,9 @@ def logistic_predict_(x, theta):
         return None
     if theta.shape[1] != 1 or x.shape[1] + 1 != theta.shape[0]:
         return None
-    return 
+    m = x.shape[0]
+    X_prime = np.hstack([np.ones((m, 1)), x])
+    return 1 / (1 + np.exp(-(X_prime @ theta)))
 
 def main():
     """Tester of my predict function"""
@@ -33,7 +35,7 @@ def main():
     theta = np.array([[2], [0.5]])
     print("theta : \n", theta)
     print("predict : \n", logistic_predict_(x, theta))
-    print("Expected : array([[0.01798620996209156]])")
+    # print("Expected by subject but wrong I think : array([[0.01798620996209156]])")
 
     print("============= 2 ===================")
     x2 = np.array([[4], [7.16], [3.2], [9.37], [0.56]])
@@ -41,7 +43,7 @@ def main():
     theta2 = np.array([[2], [0.5]])
     print("theta : \n", theta2)
     print("predict : \n", logistic_predict_(x2, theta2))
-    print("Expected : array([[0.8807970779778823]])")
+    # print("Expected by subject but wrong I think : array([[0.8807970779778823]])")
 
     print("============= 3 ===================")
     x3 = np.array([[0, 2, 3, 4], [2, 4, 5, 5], [1, 3, 2, 7]])
@@ -49,7 +51,7 @@ def main():
     theta3 = np.array([[-2.4], [-1.5], [0.3], [-1.4], [0.7]])
     print("theta : \n", theta3)
     print("predict : \n", logistic_predict_(x3, theta3))
-    print("Expected : array([[0.01798620996209156], [0.8807970779778823], [0.5]])")
+    # print("Expected by subject but wrong I think : array([[0.01798620996209156], [0.8807970779778823], [0.5]])")
 
     return 0
 
