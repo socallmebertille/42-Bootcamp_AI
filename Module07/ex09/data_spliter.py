@@ -90,6 +90,6 @@ if __name__ == "__main__":
 # tout en conservant les correspondances entre x et y
 # POURQUOI :
 # de telle sorte a reduire le biais de selection des donnees d'entrainement et de test
-# ce biais et appele l'overfitting (sur-apprentissage)
+# ce biais et appele l'overfitting (sur-apprentissage) ou le bruit
 # on veut eviter que le modele apprenne par coeur les donnees d'entrainement
 # et qu'il soit incapable de generaliser sur des donnees qu'il n'a jamais vues
