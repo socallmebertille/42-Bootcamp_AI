@@ -38,7 +38,7 @@ class MyLinearRegression():
     def loss_(self, y, y_hat):
         return loss_(y, y_hat)
     
-    @staticmethod # car méthode n'a pas accès à l'intsance self oou la class cls
+    @staticmethod
     def mse(y, y_hat):
         return mse_(y, y_hat)
     
