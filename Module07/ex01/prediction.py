@@ -27,7 +27,7 @@ def predict_(x, theta):
     return y_hat
 
 def main():
-    """Tester of my simple predict function"""
+    """Tester of my predict function"""
 
     print("============= TEST ===================")
 
