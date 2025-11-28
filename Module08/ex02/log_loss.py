@@ -4,9 +4,30 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ex01.log_pred import logistic_predict_
 
-def log_loss_(y, y_hat, eps=1e-15):
+def log_loss_elem_(y, y_hat, eps=1e-15):
+    """Computes the logistic loss element-wise.
+    Args:
+        y: has to be an numpy.ndarray, a vector of shape m * 1.
+        y_hat: has to be an numpy.ndarray, a vector of shape m * 1.
+        eps: has to be a float, epsilon (default=1e-15)
+    Returns:
+        The logistic loss element-wise as a numpy.ndarray, a vector of shape m * 1.
+        None on any error.
+    Raises:
+        This function should not raise any Exception.
     """
-    Computes the logistic loss value.
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.size == 0 or y_hat.size == 0:
+        return None
+    if y.ndim != 2 or y_hat.ndim != 2:
+        return None
+    if y.shape != y_hat.shape:
+        return None
+    return y * np.log(y_hat + eps) + (1 - y) * np.log(1 - y_hat + eps)
+
+def log_loss_(y, y_hat, eps=1e-15):
+    """Computes the logistic loss value.
     Args:
         y: has to be an numpy.ndarray, a vector of shape m * 1.
         y_hat: has to be an numpy.ndarray, a vector of shape m * 1.
@@ -25,7 +46,8 @@ def log_loss_(y, y_hat, eps=1e-15):
         return None
     if y.shape != y_hat.shape:
         return None
-    return 
+    m = y.shape[0]
+    return - (1 / m) * np.sum(log_loss_elem_(y, y_hat, eps))
 
 def main():
     """Tester of my loss function"""
