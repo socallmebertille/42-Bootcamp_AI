@@ -6,7 +6,6 @@ import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ex01.log_pred import logistic_predict_
 from ex02.log_loss import log_loss_elem_, log_loss_
-from ex03.vec_log_loss import vec_log_loss_
 from ex05.vec_log_gradient import vec_log_gradient
 
 class MyLogisticRegression():
