@@ -27,11 +27,8 @@ def vec_log_gradient(x, y, theta):
         return None
     m = x.shape[0]
     X_prime = np.hstack((np.ones((m, 1)), x))
-    y_hat = logistic_predict_(X_prime, theta)
-    grad = np.zeros((theta.shape[0], 1))
-    for j in range(grad.shape[0]):
-        grad[j] = (1 / m) * np.sum((y_hat - y) * X_prime[:, j].reshape(-1, 1))
-    return grad
+    y_hat = logistic_predict_(x, theta)
+    return (1 / m) * (X_prime.T @ (y_hat - y))
 
 def main():
     """Tester of my gradient function"""
