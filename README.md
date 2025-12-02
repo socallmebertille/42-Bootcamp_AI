@@ -12,14 +12,49 @@
 
 <h2>Table of Contents</h2>
 <ul class="list-disc pl-4 my-0">
-  <li class="my-0"><a href="#overview">Overview</a></li>
+  <li class="my-0"><a href="#get-started">Get started</a></li>
+  <ul class="list-disc pl-4 my-0">
+    <li class="my-0"><a href="#instal-the-project">Install the project</a></li>
+    <li class="my-0"><a href="#install-the-correct-environment">Install the correct environment</a></li>
+  </ul>
+  <li class="my-0"><a href="#theoretical-concepts">Theoretical concepts</a></li>
   <ul class="list-disc pl-4 my-0">
     <li class="my-0"><a href="#multivariate-linear-regression">Multivariate Linear Regression</a></li>
     <li class="my-0"><a href="#logistic-regression">Logistic Regression</a></li>
   </ul>
 </ul>
 
-<h2>Overview</h2>
+<h2>Get started</h2>
+
+#### Install the project
+
+```bash
+git clone https://github.com/socallmebertille/42-Bootcamp_AI.git 42-Bootcamp_AI
+cd 42-Bootcamp_AI
+```
+
+#### Install the correct environment
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh # installation
+
+source ~/.bashrc                                # restart home for bash
+source ~/.zshrc                                 # restart for zsh
+
+uv --version                                    # version check
+uv python install 3.13                          # installation version python
+
+uv venv                                         # creation
+source .venv/bin/activate                       # activation
+
+uv pip install numpy pandas jupyter ruff pytest # installation of dependancies
+
+python your_script.py                           # use
+
+deactivate                                      # desactivation
+```
+
+<h2>Theoretical concepts</h2>
 
 ### Multivariate Linear Regression
 
