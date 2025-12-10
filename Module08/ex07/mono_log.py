@@ -41,31 +41,31 @@ def main():
     # Convert y to binary for the specified zipcode
     y_binary = np.where(y == zipcode, 1, 0).reshape(-1, 1)
 
-    # step 1 : split data 80% train / 20% test
+    # STEP 1 : split data 80% train / 20% test
     x_train, x_test, y_train, y_test = MyLR.data_spliter_(x, y_binary, 0.8)
-    # step 2 : polynomial features
+    # STEP 2 : polynomial features
     x_poly = MyLR.add_polynomial_features(x_train, 3)
     x_poly_test = MyLR.add_polynomial_features(x_test, 3)
-    # step 3 : normalisation
+    # STEP 3 : normalisation
     x_poly_norm, mean, std = MyLR.normalize_features(x_poly)
     x_poly_norm_test = (x_poly_test - mean) / std
     thetas = np.ones((x_poly_norm.shape[1] + 1, 1))
     myLR = MyLR(thetas, alpha=1e-3, max_iter=100000)
-    # step 4 : entrainement
+    # STEP 4 : entrainement
     myLR.fit_(x_poly_norm, y_train)
-    # step 5 : evaluation
+    # STEP 5 : evaluation
     y_pred_train = myLR.predict_(x_poly_norm)
     y_pred_test = myLR.predict_(x_poly_norm_test)
     # Convert predictions to binary (0 or 1)
     y_pred_binary_train = np.where(y_pred_train >= 0.5, 1, 0)
     y_pred_binary_test = np.where(y_pred_test >= 0.5, 1, 0)
-    # step 6 : test performance
+    # STEP 6 : test performance
     accuracy_train = np.mean(y_pred_binary_train == y_train)
     accuracy_test = np.mean(y_pred_binary_test == y_test)
     print(f"Train Accuracy = {accuracy_train:.4f}, Test Accuracy = {accuracy_test:.4f}")
     print(f"Fraction of correct predictions on test set: {accuracy_test:.4f}")
 
-    # step 7 : Plot 3 scatter plots
+    # STEP 7 : Plot 3 scatter plots
     feature_names = ['weight', 'height', 'bone_density']
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
     # Chaque tuple (i, j) représente une paire de features
