@@ -21,7 +21,8 @@ class MyLogisticRegression():
         else:
             print("Error\nThetas array isnot from the numpy library")
 
-    def data_spliter_(self, x, y, proportion):
+    @staticmethod
+    def data_spliter_(x, y, proportion):
         return data_spliter(x, y, proportion)
 
     def predict_(self, x):
