@@ -71,8 +71,8 @@ def main():
     # Chaque tuple (i, j) représente une paire de features
     for idx, (i, j) in enumerate([(0, 1), (0, 2), (1, 2)]):
         ax = axes[idx]
-        # Correct classification = prediction == ground truth
-        correct = y_pred_binary_test.flatten() == y_test.flatten()
+        # Correct classification = tableau de bool ou true si prediction == ground truth
+        correct = y_pred_binary_test.flatten() == y_test.flatten()   # flatten() renvoie une copie du tableau en 1 dimension
         # (1) Correctement classés comme "autre planète" (label=0)
         mask = (y_pred_binary_test.flatten() == 0) & correct
         ax.scatter(x_test[mask, i], x_test[mask, j],
@@ -81,7 +81,7 @@ def main():
         mask = (y_pred_binary_test.flatten() == 1) & correct
         ax.scatter(x_test[mask, i], x_test[mask, j],
                 c='green', marker='o', alpha=0.6, label=f'Zipcode {zipcode} (correct)')
-        # (3) Mauvaises prédictions
+        # (3) Mauvaises prédictions (on inverse les true et false avec operateur binaire ~ NOT bitwise)
         incorrect = ~correct
         ax.scatter(x_test[incorrect, i], x_test[incorrect, j],
                 color='red', s=100, linewidths=2, marker='x', label='Incorrect')
