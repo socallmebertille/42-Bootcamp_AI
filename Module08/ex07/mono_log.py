@@ -24,8 +24,9 @@ def main():
     if len(sys.argv) != 2 or check_flag(sys.argv[1]) == 1:
         print("Usage: python mono_log.py -zipcode=x (x = 0, 1, 2 ou 3)")
         return 1
+    # STEP 1 : Get zipcode flag
     zipcode = int((sys.argv[1]).split("=")[1])
-    print("Zipcode: ", zipcode)
+    print(f"Training model for Zipcode {zipcode}...")
 
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "solar_system_census.csv")
@@ -35,61 +36,47 @@ def main():
     except FileNotFoundError:
         print("Error: CSV files not found!")
         return 1
-    
     x = np.array(data_x[['weight', 'height', 'bone_density']])
     y = np.array(data_y['Origin']).reshape(-1, 1)
-    # Convert y to binary for the specified zipcode
+    
+    # STEP 3 : label binarization
     y_binary = np.where(y == zipcode, 1, 0).reshape(-1, 1)
+    myLR = MyLR(theta=np.ones((1, 1)), alpha=1e-3, max_iter=100000)
+    # STEP 2 : prepare data (split, polynomial features, normalization)
+    myLR.prepare_data(x, y_binary, proportion=0.8, poly_degree=3, normalize=True)
+    # STEP 4 : train model
+    myLR.train()
+    # STEP 5 : calculate and display accuracy
+    results = myLR.evaluate()
+    print(f"Train Accuracy = {results['accuracy_train']:.4f}, Test Accuracy = {results['accuracy_test']:.4f}")
+    print(f"Fraction of correct predictions on test set: {results['accuracy_test']:.4f}")
 
-    # STEP 1 : split data 80% train / 20% test
-    x_train, x_test, y_train, y_test = MyLR.data_spliter_(x, y_binary, 0.8)
-    # STEP 2 : polynomial features
-    x_poly = MyLR.add_polynomial_features(x_train, 3)
-    x_poly_test = MyLR.add_polynomial_features(x_test, 3)
-    # STEP 3 : normalisation
-    x_poly_norm, mean, std = MyLR.normalize_features(x_poly)
-    x_poly_norm_test = (x_poly_test - mean) / std
-    thetas = np.ones((x_poly_norm.shape[1] + 1, 1))
-    myLR = MyLR(thetas, alpha=1e-3, max_iter=100000)
-    # STEP 4 : entrainement
-    myLR.fit_(x_poly_norm, y_train)
-    # STEP 5 : evaluation
-    y_pred_train = myLR.predict_(x_poly_norm)
-    y_pred_test = myLR.predict_(x_poly_norm_test)
-    # Convert predictions to binary (0 or 1)
-    y_pred_binary_train = np.where(y_pred_train >= 0.5, 1, 0)
-    y_pred_binary_test = np.where(y_pred_test >= 0.5, 1, 0)
-    # STEP 6 : test performance
-    accuracy_train = np.mean(y_pred_binary_train == y_train)
-    accuracy_test = np.mean(y_pred_binary_test == y_test)
-    print(f"Train Accuracy = {accuracy_train:.4f}, Test Accuracy = {accuracy_test:.4f}")
-    print(f"Fraction of correct predictions on test set: {accuracy_test:.4f}")
-
-    # STEP 7 : Plot 3 scatter plots
+    # STEP 6 : Plot 3 scatter plots
     feature_names = ['weight', 'height', 'bone_density']
     fig, axes = plt.subplots(1, 3, figsize=(15, 4))
-    # Chaque tuple (i, j) représente une paire de features
+    
     for idx, (i, j) in enumerate([(0, 1), (0, 2), (1, 2)]):
         ax = axes[idx]
-        # Correct classification = tableau de bool ou true si prediction == ground truth
-        correct = y_pred_binary_test.flatten() == y_test.flatten()   # flatten() renvoie une copie du tableau en 1 dimension
-        # (1) Correctement classés comme "autre planète" (label=0)
-        mask = (y_pred_binary_test.flatten() == 0) & correct
-        ax.scatter(x_test[mask, i], x_test[mask, j],
+        correct = results['y_pred_binary_test'].flatten() == myLR.y_test_.flatten()
+        
+        mask = (results['y_pred_binary_test'].flatten() == 0) & correct
+        ax.scatter(myLR.x_test_[mask, i], myLR.x_test_[mask, j],
                 c='blue', marker='o', alpha=0.6, label='Other (correct)')
-        # (2) Correctement classés comme "notre zipcode" (label=1)
-        mask = (y_pred_binary_test.flatten() == 1) & correct
-        ax.scatter(x_test[mask, i], x_test[mask, j],
+        
+        mask = (results['y_pred_binary_test'].flatten() == 1) & correct
+        ax.scatter(myLR.x_test_[mask, i], myLR.x_test_[mask, j],
                 c='green', marker='o', alpha=0.6, label=f'Zipcode {zipcode} (correct)')
-        # (3) Mauvaises prédictions (on inverse les true et false avec operateur binaire ~ NOT bitwise)
+        
         incorrect = ~correct
-        ax.scatter(x_test[incorrect, i], x_test[incorrect, j],
+        ax.scatter(myLR.x_test_[incorrect, i], myLR.x_test_[incorrect, j],
                 color='red', s=100, linewidths=2, marker='x', label='Incorrect')
+        
         ax.set_xlabel(feature_names[i])
         ax.set_ylabel(feature_names[j])
         ax.legend()
         ax.grid(True, alpha=0.3)
-    plt.suptitle(f'Logistic Regression: Zipcode {zipcode} vs All (Accuracy: {accuracy_test:.4f})')
+    
+    plt.suptitle(f'Logistic Regression: Zipcode {zipcode} vs All (Accuracy: {results["accuracy_test"]:.4f})')
     plt.tight_layout()
     plt.show()
 
