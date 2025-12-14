@@ -1,27 +1,6 @@
 import numpy as np
+import pandas as pd
 from sklearn.metrics import confusion_matrix
-
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from ex08.other_metrics import accuracy_score_, precision_score_, recall_score_, f1_score_
-
-def confusion_matrix_(y_true, y_hat, labels=None):
-    """
-    Compute confusion matrix to evaluate the accuracy of a classification.
-    Args:
-        y_true: numpy.ndarray for the correct labels
-        y_hat: numpy.ndarray for the predicted labels
-        labels: Optional, a list of labels to index the matrix.
-        This may be used to reorder or select a subset of labels. (default=None)
-    Returns:
-        The confusion matrix as a numpy ndarray.
-        None on any error.
-    Raises:
-        This function should not raise any Exception.
-    """
-    mat = np.zeros((y_true))
-
-    return 
 
 def confusion_matrix_(y_true, y_hat, labels=None, df_option=False):
     """
@@ -39,7 +18,22 @@ def confusion_matrix_(y_true, y_hat, labels=None, df_option=False):
     Raises:
         This function should not raise any Exception.
     """
-    return
+    if not isinstance(y_true, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y_true.shape != y_hat.shape:
+        return None
+    if labels is None:
+        labels = np.unique(np.concatenate((y_true, y_hat)))
+    else:
+        labels = np.array(labels)
+    nb_label = len(labels)
+    mat = np.zeros((nb_label, nb_label))
+    for i in range(nb_label):
+        for j in range(nb_label):
+            mat[i,j] = np.sum((y_true == labels[i]) & (y_hat == labels[j]))
+    if df_option:
+        return pd.DataFrame(mat, index=labels, columns=labels)
+    return mat
 
 def main():
     """Tester of my confusion_matrix_ function"""
@@ -48,8 +42,8 @@ def main():
 
     y_hat = np.array([['norminet'], ['dog'], ['norminet'], ['norminet'], ['dog'], ['bird']])
     y = np.array([['dog'], ['dog'], ['norminet'], ['norminet'], ['dog'], ['norminet']])
-    print("y_hat array : \n", y_hat)
-    print("y array : \n", y)
+    print("y_hat array : \n", y_hat.reshape(1, -1))
+    print("y array : \n", y.reshape(1, -1))
 
     print("============= 1 ===================")
     print("confusion matrix :\n", confusion_matrix_(y, y_hat))
