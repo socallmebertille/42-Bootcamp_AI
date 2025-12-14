@@ -1,6 +1,10 @@
 import numpy as np
 from sklearn.metrics import confusion_matrix
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from ex08.other_metrics import accuracy_score_, precision_score_, recall_score_, f1_score_
+
 def confusion_matrix_(y_true, y_hat, labels=None):
     """
     Compute confusion matrix to evaluate the accuracy of a classification.
@@ -15,7 +19,7 @@ def confusion_matrix_(y_true, y_hat, labels=None):
     Raises:
         This function should not raise any Exception.
     """
-
+    mat = np.zeros((y_true))
 
     return 
 
@@ -48,26 +52,26 @@ def main():
     print("y array : \n", y)
 
     print("============= 1 ===================")
-    print("confusion matrix :", confusion_matrix_(y, y_hat))
+    print("confusion matrix :\n", confusion_matrix_(y, y_hat))
     print("Expected : array([[0 0 0]\n\t\t[0 2 1]\n\t\t[1 0 2]])")
-    print("sklearn confusion matrix :", confusion_matrix(y, y_hat))
+    print("sklearn confusion matrix :\n", confusion_matrix(y, y_hat))
 
     print("============= 2 ===================")
-    print("confusion matrix :", confusion_matrix_(y, y_hat, labels=['dog', 'norminet']))
+    print("confusion matrix :\n", confusion_matrix_(y, y_hat, labels=['dog', 'norminet']))
     print("Expected : array([[2 1]\n\t\t[0 2]])")
-    print("sklearn confusion matrix :", confusion_matrix(y, y_hat, labels=['dog', 'norminet']))
+    print("sklearn confusion matrix :\n", confusion_matrix(y, y_hat, labels=['dog', 'norminet']))
 
     print("============= TEST 2 ===================")
 
     print("============= 1 ===================")
-    print("confusion matrix :", confusion_matrix_(y, y_hat, df_option=True))
+    print("confusion matrix :\n", confusion_matrix_(y, y_hat, df_option=True))
     print("Expected :\n      bird  dog  norminet\n"
           "bird       0    0         0\n"
           "dog        0    2         1\n"
           "norminet   1    0         2")
     
     print("============= 2 ===================")
-    print("confusion matrix :", confusion_matrix_(y, y_hat, labels=['bird', 'dog'], df_option=True))
+    print("confusion matrix :\n", confusion_matrix_(y, y_hat, labels=['bird', 'dog'], df_option=True))
     print("Expected :\n      bird  dog\n"
           "bird       0    0\n"
           "dog        0    2")

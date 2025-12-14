@@ -12,6 +12,10 @@ def accuracy_score_(y, y_hat):
     Raises:
         This function should not raise any Exception.
     """
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.shape != y_hat.shape:
+        return None
     # objets classés correctement / tous les objets
     accuracy = np.mean(y_hat == y)
     return accuracy
@@ -28,6 +32,10 @@ def precision_score_(y, y_hat, pos_label=1):
     Raises:
         This function should not raise any Exception.
     """
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.shape != y_hat.shape:
+        return None
     # objets correctement classés pos_label / tout ceux classés pos_label
     precision = np.sum((y_hat == pos_label) & (y == pos_label)) / np.sum(y_hat == pos_label)
     return precision
@@ -44,6 +52,10 @@ def recall_score_(y, y_hat, pos_label=1):
     Raises:
         This function should not raise any Exception.
     """
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.shape != y_hat.shape:
+        return None
     # objets classés correctement pos_label / tous ceux réellement pos_label
     recall = np.sum((y_hat == pos_label) & (y == pos_label)) / np.sum(y == pos_label)
     return recall
@@ -60,6 +72,10 @@ def f1_score_(y, y_hat, pos_label=1):
     Raises:
         This function should not raise any Exception.
     """
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+        return None
+    if y.shape != y_hat.shape:
+        return None
     # compromis entre précision et sensibilité
     precision = precision_score_(y, y_hat, pos_label)
     recall = recall_score_(y, y_hat, pos_label)
