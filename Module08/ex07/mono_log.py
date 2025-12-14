@@ -21,12 +21,15 @@ def check_flag(flag):
 def main():
     """Train a logistic regression model for one zipcode vs all others"""
 
+    print("=== Monoclass Logistic Regression (One Label to Discriminate Them All) ===\n")
+
     if len(sys.argv) != 2 or check_flag(sys.argv[1]) == 1:
         print("Usage: python mono_log.py -zipcode=x (x = 0, 1, 2 ou 3)")
         return 1
     # STEP 1 : Get zipcode flag
     zipcode = int((sys.argv[1]).split("=")[1])
-    print(f"Training model for Zipcode {zipcode}...")
+    planet_names = ['Venus (0)', 'Earth (1)', 'Mars (2)', 'Asteroids (3)']
+    print(f"Training model for {planet_names[zipcode]}...")
 
     try:
         csv_path = os.path.join(os.path.dirname(__file__), "solar_system_census.csv")
@@ -39,17 +42,19 @@ def main():
     x = np.array(data_x[['weight', 'height', 'bone_density']])
     y = np.array(data_y['Origin']).reshape(-1, 1)
     
-    # STEP 3 : label binarization
+    # STEP 2 : label binarization
     y_binary = np.where(y == zipcode, 1, 0).reshape(-1, 1)
     myLR = MyLR(theta=np.ones((1, 1)), alpha=1e-3, max_iter=100000)
-    # STEP 2 : prepare data (split, polynomial features, normalization)
+    # STEP 3 : prepare data (split, polynomial features, normalization)
     myLR.prepare_data(x, y_binary, proportion=0.8, poly_degree=3, normalize=True)
     # STEP 4 : train model
     myLR.train()
     # STEP 5 : calculate and display accuracy
     results = myLR.evaluate()
-    print(f"Train Accuracy = {results['accuracy_train']:.4f}, Test Accuracy = {results['accuracy_test']:.4f}")
+    print(f"  → Training Accuracy = {results['accuracy_train']:.4f}")
+    print(f"\n{'='*50}")
     print(f"Fraction of correct predictions on test set: {results['accuracy_test']:.4f}")
+    print(f"{'='*50}\n")
 
     # STEP 6 : Plot 3 scatter plots
     feature_names = ['weight', 'height', 'bone_density']
