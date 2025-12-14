@@ -37,6 +37,8 @@ def precision_score_(y, y_hat, pos_label=1):
     if y.shape != y_hat.shape:
         return None
     # objets correctement classés pos_label / tout ceux classés pos_label
+    if np.sum(y_hat == pos_label) == 0:
+        return None
     precision = np.sum((y_hat == pos_label) & (y == pos_label)) / np.sum(y_hat == pos_label)
     return precision
 
@@ -57,6 +59,8 @@ def recall_score_(y, y_hat, pos_label=1):
     if y.shape != y_hat.shape:
         return None
     # objets classés correctement pos_label / tous ceux réellement pos_label
+    if np.sum(y == pos_label) == 0:
+        return None
     recall = np.sum((y_hat == pos_label) & (y == pos_label)) / np.sum(y == pos_label)
     return recall
 
@@ -79,6 +83,8 @@ def f1_score_(y, y_hat, pos_label=1):
     # compromis entre précision et sensibilité
     precision = precision_score_(y, y_hat, pos_label)
     recall = recall_score_(y, y_hat, pos_label)
+    if precision is None or recall is None or precision + recall == 0:
+        return None
     f1_score = 2 * precision * recall / (precision + recall)
     return f1_score
 
