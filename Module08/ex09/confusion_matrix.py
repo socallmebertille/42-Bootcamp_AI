@@ -20,6 +20,8 @@ def confusion_matrix_(y_true, y_hat, labels=None, df_option=False):
     """
     if not isinstance(y_true, np.ndarray) or not isinstance(y_hat, np.ndarray):
         return None
+    y_true = y_true.ravel() # applatit le numpy array pour avoir 1 seul dimension
+    y_hat = y_hat.ravel()
     if y_true.shape != y_hat.shape:
         return None
     if labels is None:
@@ -27,7 +29,7 @@ def confusion_matrix_(y_true, y_hat, labels=None, df_option=False):
     else:
         labels = np.array(labels)
     nb_label = len(labels)
-    mat = np.zeros((nb_label, nb_label))
+    mat = np.zeros((nb_label, nb_label), dtype=int)
     for i in range(nb_label):
         for j in range(nb_label):
             mat[i,j] = np.sum((y_true == labels[i]) & (y_hat == labels[j]))
