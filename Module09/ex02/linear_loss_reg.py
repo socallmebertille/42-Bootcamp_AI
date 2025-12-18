@@ -1,5 +1,9 @@
 import numpy as np
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from ex01.l2_reg import l2
+
 def reg_loss_(y, y_hat, theta, lambda_):
     """Computes the regularized loss of a linear regression model from two non-empty numpy.array,
     without any for loop. The two arrays must have the same dimensions.
