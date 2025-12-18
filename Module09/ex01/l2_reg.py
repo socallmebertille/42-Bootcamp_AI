@@ -16,9 +16,10 @@ def iterative_l2(theta):
         return None
     if theta.ndim != 2:
         return None
-    if theta.shape[1] != 1 or theta.shape[0]:
-        return None
-    return 
+    l2_sum = 0.0
+    for j in range(1, theta.shape[0]):  # on saute theta[0]
+        l2_sum += theta[j, 0] ** 2
+    return float(l2_sum)
 
 def l2(theta):
     """Computes the L2 regularization of a non-empty numpy.ndarray, without any for-loop.
@@ -36,9 +37,9 @@ def l2(theta):
         return None
     if theta.ndim != 2:
         return None
-    if theta.shape[1] != 1 or theta.shape[0]:
-        return None
-    return 
+    theta_prime = theta.copy()
+    theta_prime[0, 0] = 0
+    return float((theta_prime.T @ theta_prime).item()) # item() : recupere la valeur scalaire de la mutiplication de 2 vecteur place au sein d'un tableau => equivaent a np[0, 0]
 
 def main():
     """Tester of my l2 reg functions"""
