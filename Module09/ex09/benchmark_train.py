@@ -1,52 +1,96 @@
 import numpy as np
 import pandas as pd
 import pickle
-import os
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from Module09.ex08.my_logistic_regression import MyLogisticRegression as MyLR
+from Module08.ex08.other_metrics import f1_score_
+
+def one_vs_all_predict(classifiers, X):
+    """Return predicted class using one-vs-all classifiers."""
+    probs = [clf.predict_(X) for clf in classifiers]
+    probs = np.hstack(probs)
+    return np.argmax(probs, axis=1).reshape(-1, 1)
 
 def main():
-    """Tester of my Machine Learning function"""
 
-    try:
-        csv_path = os.path.join(os.path.dirname(__file__), "space_avocado.csv")
-        data = pd.read_csv(csv_path)
-    except FileNotFoundError:
-        print("Error: space_avocado.csv not found!")
-        print("Make sure the file is in the same directory as this script.")
-        return 1
+    # ------------------ Load data ------------------
+    base = os.path.dirname(__file__)
+    # Drop the CSV index column to keep only the 3 features and 1 target
+    X = pd.read_csv(os.path.join(base, "solar_system_census.csv"), index_col=0).to_numpy()
+    Y = pd.read_csv(
+        os.path.join(base, "solar_system_census_planets.csv"), index_col=0
+    ).to_numpy()
 
-    X = data[["weight", "prod_distance", "time_delivery"]].to_numpy()
-    Y = data[["target"]].to_numpy()
-    theta = np.ones((X.shape[1] + 2, 1))                                    # init de ma regression (theta_nb 1 pour biais)
-    lr = MyLR(theta, alpha=1e-3, max_iter=100000)
-    Xtrain, Xtest, Ytrain, Ytest = lr.data_spliter_(X, Y, 0.8)              # step 1 : split data 80% train / 20% test
+    # ------------------ Split data ------------------
+    # 80% train+val / 20% test
+    X_tv, X_test, Y_tv, Y_test = MyLR.data_spliter_(X, Y, 0.8)
+    # 80% train / 20% val (performed on the previous train+val split)
+    X_train, X_val, Y_train, Y_val = MyLR.data_spliter_(X_tv, Y_tv, 0.8)
 
+    # ------------------ Polynomial features ------------------
+    DEGREE = 3
+    X_train_poly = MyLR.add_polynomial_features(X_train, DEGREE)
+    X_val_poly = MyLR.add_polynomial_features(X_val, DEGREE)
+    X_test_poly = MyLR.add_polynomial_features(X_test, DEGREE)
+
+    X_train_norm, mean, std = MyLR.normalize_features(X_train_poly)
+    X_val_norm = (X_val_poly - mean) / std
+    X_test_norm = (X_test_poly - mean) / std
+
+    # ------------------ Training ------------------
+    lambdas = np.arange(0, 1.2, 0.2)
     models = {}
-    for degree in range(1, 5):
-        print(f"\n=== Training degree {degree} ===")
-        X_poly = MyLR.add_polynomial_features(Xtrain, degree)               # step 2 : polynomial features
-        X_poly_test = MyLR.add_polynomial_features(Xtest, degree)
-        X_poly_norm, mean, std = MyLR.normalize_features(X_poly)            # step 3 : normalisation
-        X_poly_test_norm = (X_poly_test - mean) / std
-        lr.fit_(X_poly_norm, Ytrain)                                        # step 4 : entrainement
-        y_pred_train = lr.predict_(X_poly_norm)                             # step 5 : evaluation
-        y_pred_test = lr.predict_(X_poly_test_norm)
-        mse_train = lr.mse(y_pred_train, Ytrain)                            # step 6 : test performance
-        mse_test = lr.mse(y_pred_test, Ytest)
-        models[degree] = {                                                  # step 7 : save model
-            'theta': lr.thetas,
+
+    for lambda_ in lambdas:
+        print(f"\nTraining models with λ = {lambda_:.1f}")
+        classifiers = []
+
+        for cls in range(4):
+            y_bin = (Y_train == cls).astype(int)
+
+            theta = np.zeros((X_train_norm.shape[1] + 1, 1))
+            lr = MyLR(
+                theta,
+                alpha=0.01,
+                max_iter=3000,
+                penality='l2',
+                lambda_=lambda_
+            )
+            lr.fit_(X_train_norm, y_bin)
+            classifiers.append(lr)
+
+        # -------- Validation evaluation --------
+        y_val_pred = one_vs_all_predict(classifiers, X_val_norm)
+        f1_val = f1_score_(Y_val, y_val_pred)
+
+        print(f"λ = {lambda_:.1f} → Validation F1 = {f1_val:.4f}")
+
+        models[lambda_] = {
+            'lambda': float(lambda_),
+            'degree': DEGREE,
+            'classifiers': classifiers,
+            'f1_val': float(f1_val),
             'mean': mean,
-            'std': std,
-            'mse_train': float(mse_train),
-            'mse_test': float(mse_test)
+            'std': std
         }
-        print(f"Degree {degree} → Train MSE = {mse_train:.2f}, Test MSE = {mse_test:.2f}")
 
-    with open(os.path.join(os.path.dirname(__file__), "models.pkl"), "wb") as f: # Sauvegarde des modèles dans fichier pickle
+    # ------------------ Test scores ------------------
+    print("\nTest F1 scores:")
+    for lambda_, model in models.items():
+        y_test_pred = one_vs_all_predict(model['classifiers'], X_test_norm)
+        f1_test = f1_score_(Y_test, y_test_pred)
+        model['f1_test'] = float(f1_test)
+        print(f"λ = {lambda_:.1f} → Test F1 = {f1_test:.4f}")
+
+    # ------------------ Save models ------------------
+    with open(os.path.join(base, "models.pkl"), "wb") as f:
         pickle.dump(models, f)
-        print("\nAll models saved to 'models.pkl'.")
 
+    print("\nAll models saved to models.pkl")
     return 0
+
 
 if __name__ == "__main__":
     main()
