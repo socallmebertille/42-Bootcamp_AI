@@ -8,19 +8,11 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 from Module09.ex08.my_logistic_regression import MyLogisticRegression as MyLR
 from Module08.ex08.other_metrics import f1_score_
-
-
-def one_vs_all_predict(classifiers, X):
-    """Predict class labels using one-vs-all classifiers."""
-    probs = [clf.predict_(X) for clf in classifiers]
-    probs = np.hstack(probs)
-    return np.argmax(probs, axis=1).reshape(-1, 1)
-
+from Module09.ex09.benchmark_train import one_vs_all_predict
 
 def load_models(path):
     with open(path, "rb") as f:
         return pickle.load(f)
-
 
 def plot_scores(models):
     lambdas = [float(l) for l in models.keys()]
@@ -37,7 +29,6 @@ def plot_scores(models):
     plt.tight_layout()
     plt.show()
 
-
 def plot_predictions(X, y_true, y_pred):
     # Use weight vs height for a readable 2D view
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
@@ -46,16 +37,10 @@ def plot_predictions(X, y_true, y_pred):
     for cls, color, label in zip(range(4), colors, labels):
         mask_true = (y_true.ravel() == cls)
         mask_pred = (y_pred.ravel() == cls)
-        plt.scatter(
-            X[mask_true, 0], X[mask_true, 1],
-            c=color, marker="o", edgecolors="k", alpha=0.6,
-            label=f"Actual {label}"
-        )
-        plt.scatter(
-            X[mask_pred, 0], X[mask_pred, 1],
-            color=color, marker="x", linewidths=1.5, alpha=0.9,
-            label=f"Pred {label}"
-        )
+        plt.scatter(X[mask_true, 0], X[mask_true, 1], c=color, marker="o", 
+                    edgecolors="k", alpha=0.6, label=f"Actual {label}")
+        plt.scatter(X[mask_pred, 0], X[mask_pred, 1], color=color, marker="x",
+                    linewidths=1.5, alpha=0.9, label=f"Pred {label}")
     plt.xlabel("Weight")
     plt.ylabel("Height")
     plt.title("Best model – actual vs predicted classes")
@@ -64,11 +49,9 @@ def plot_predictions(X, y_true, y_pred):
     plt.tight_layout()
     plt.show()
 
-
 def main():
     base = os.path.dirname(__file__)
     models_path = os.path.join(base, "models.pkl")
-
     models = load_models(models_path)
 
     # Display stored scores

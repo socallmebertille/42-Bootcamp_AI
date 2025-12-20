@@ -17,11 +17,8 @@ def main():
 
     # ------------------ Load data ------------------
     base = os.path.dirname(__file__)
-    # Drop the CSV index column to keep only the 3 features and 1 target
     X = pd.read_csv(os.path.join(base, "solar_system_census.csv"), index_col=0).to_numpy()
-    Y = pd.read_csv(
-        os.path.join(base, "solar_system_census_planets.csv"), index_col=0
-    ).to_numpy()
+    Y = pd.read_csv(os.path.join(base, "solar_system_census_planets.csv"), index_col=0).to_numpy()
 
     # ------------------ Split data ------------------
     # 80% train+val / 20% test
@@ -42,29 +39,18 @@ def main():
     # ------------------ Training ------------------
     lambdas = np.arange(0, 1.2, 0.2)
     models = {}
-
     for lambda_ in lambdas:
         print(f"\nTraining models with λ = {lambda_:.1f}")
         classifiers = []
-
         for cls in range(4):
             y_bin = (Y_train == cls).astype(int)
-
             theta = np.zeros((X_train_norm.shape[1] + 1, 1))
-            lr = MyLR(
-                theta,
-                alpha=0.01,
-                max_iter=3000,
-                penality='l2',
-                lambda_=lambda_
-            )
+            lr = MyLR(theta, alpha=0.01, max_iter=3000, penality='l2', lambda_=lambda_)
             lr.fit_(X_train_norm, y_bin)
             classifiers.append(lr)
-
         # -------- Validation evaluation --------
         y_val_pred = one_vs_all_predict(classifiers, X_val_norm)
         f1_val = f1_score_(Y_val, y_val_pred)
-
         print(f"λ = {lambda_:.1f} → Validation F1 = {f1_val:.4f}")
 
         models[lambda_] = {
