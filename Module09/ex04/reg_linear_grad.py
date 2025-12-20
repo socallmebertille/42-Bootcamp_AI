@@ -92,11 +92,11 @@ def main():
     print("theta : \n", theta)
 
     print("============= 1.1 ===================")
-    print("gradient w/ lambda 1 : \n", reg_linear_grad(y, x, theta, 1))
+    print("gradient w/ lambda 1 : \n", reg_linear_grad(y, x, theta, 1.0))
     print("Expected : array([[ -60.99 ], \n\t\t[-195.64714286],\n\t\t[ 863.46571429],\n\t\t[-644.52142857]])")
 
     print("============= 1.2 ===================")
-    print("vector gradient w/ lambda 1 : \n", vec_reg_linear_grad(y, x, theta, 1))
+    print("vector gradient w/ lambda 1 : \n", vec_reg_linear_grad(y, x, theta, 1.0))
     print("Expected : array([[ -60.99 ],\n\t\t[-195.64714286],\n\t\t[ 863.46571429],\n\t\t[-644.52142857]])")
 
     print("============= 2.1 ===================")
