@@ -1,5 +1,9 @@
 import numpy as np
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from ex01.l2_reg import l2
+
 def reg_log_loss_(y, y_hat, theta, lambda_):
     """Computes the regularized loss of a logistic regression model from two non-empty numpy.ndarray,
     without any for loop. The two arrays must have the same shapes.
@@ -15,15 +19,19 @@ def reg_log_loss_(y, y_hat, theta, lambda_):
     Raises:
         This function should not raise any Exception.
     """
-    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray) or not isinstance(theta, np.ndarray) or not isinstance(lambda_, float):
         return None
-    if y.size == 0 or y_hat.size == 0:
+    if y.size == 0 or y_hat.size == 0 or theta.size == 0:
         return None
-    if y.ndim != 2 or y_hat.ndim != 2:
+    if y.ndim != 2 or y_hat.ndim != 2 or theta.ndim != 2:
         return None
-    if y.shape[1] != 1 or y_hat.shape[1] != 1 or y.shape[0] != y_hat.shape[0]:
+    if y.shape != y_hat.shape or y.shape[1] != 1 or theta.shape[1] != 1:
         return None
-    return 
+    m = y.shape[0]
+    one_vec = np.ones((m, 1))
+    loss_function = - (((y.T @ np.log(y_hat)) + ((one_vec - y).T @ (np.log(one_vec - y_hat)))) / m)
+    biais = ((lambda_ * l2(theta)) / (2 * m))
+    return (loss_function + biais).item()
 
 def main():
     """Tester of my regularized loss function of a logistic regression model"""
