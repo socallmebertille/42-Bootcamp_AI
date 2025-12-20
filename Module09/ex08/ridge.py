@@ -15,12 +15,13 @@ class MyRidge(MyLogisticRegression):
         My personnal logistic ridge regression class to fit like a boss.
         Inherits from MyLogisticRegression and adds proper L2 regularization support.
     """
-    def __init__(self, thetas, alpha=0.001, max_iter=1000, lambda_=1.0):
-        if isinstance(thetas, np.ndarray):
-            self.thetas = thetas.reshape(-1, 1)
+    def __init__(self, theta, alpha=0.001, max_iter=1000, lambda_=1.0, penalty=None):
+        super().__init__(theta, alpha, max_iter, penalty, lambda_)
+        if isinstance(theta, np.ndarray):
+            self.theta = theta.reshape(-1, 1)
         else:
             print("Error\nThetas array is not from the numpy library")
-        
+        self.penality = penalty if penalty == None or penalty == "l2" else None
         self.alpha = alpha
         self.max_iter = max_iter
         self.lambda_ = lambda_
@@ -28,7 +29,7 @@ class MyRidge(MyLogisticRegression):
     def get_params_(self):
         """Returns the parameters of the estimator"""
         return {
-            'thetas': self.thetas,
+            'theta': self.theta,
             'alpha': self.alpha,
             'max_iter': self.max_iter,
             'lambda_': self.lambda_
@@ -36,8 +37,8 @@ class MyRidge(MyLogisticRegression):
     
     def set_params_(self, **kwargs):
         """Sets the parameters of the estimator"""
-        if 'thetas' in kwargs:
-            self.thetas = kwargs['thetas']
+        if 'theta' in kwargs:
+            self.theta = kwargs['theta']
         if 'alpha' in kwargs:
             self.alpha = kwargs['alpha']
         if 'max_iter' in kwargs:
@@ -68,21 +69,21 @@ class MyRidge(MyLogisticRegression):
         Computes the regularized logistic gradient
         IMPORTANT: Check the parameter order expected by vec_reg_logistic_grad!
         """
-        return vec_reg_logistic_grad(y, x, self.thetas, self.lambda_)
+        return super().gradient_(x, y)
     
     def fit_(self, x, y):
         """
         Fits the logistic ridge regression model using gradient descent
         """
-        self.thetas = super().fit_(x, y)
-        return self.thetas
+        self.theta = super().fit_(x, y)
+        return self.theta
 
 
 def main():
     """Test Logistic Ridge Regression"""
 
     # valeurs expected encore erronnees mais avec lambda 0.0 on s'y rapproche le +
-    
+
     print("============= TEST ===================")
 
     X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [3., 5., 9., 14.]])
@@ -109,7 +110,7 @@ def main():
     print("Training with alpha={}, max_iter={}, lambda_={}...".format(
         mylr.alpha, mylr.max_iter, mylr.lambda_))
     mylr.fit_(X, Y)
-    print("thetas trained : \n", mylr.thetas)
+    print("thetas trained : \n", mylr.theta)
     print("Expected : array([[ 2.11826435]\n\t\t[ 0.10154334]\n\t\t[ 6.43942899]\n\t\t[-5.10817488]\n\t\t[ 0.6212541 ]])")
 
     print("\n============= 4 - Prediction after training ===================")

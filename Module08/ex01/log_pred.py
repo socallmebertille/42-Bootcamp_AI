@@ -22,7 +22,9 @@ def logistic_predict_(x, theta):
         return None
     m = x.shape[0]
     X_prime = np.hstack([np.ones((m, 1)), x])
-    return 1 / (1 + np.exp(-(X_prime @ theta)))
+    z = X_prime @ theta
+    z = np.clip(z, -250, 250) # Peu importe ce qui arrive, ne dépasse jamais ces bornes.
+    return 1 / (1 + np.exp(-z))
 
 def main():
     """Tester of my predict function"""
