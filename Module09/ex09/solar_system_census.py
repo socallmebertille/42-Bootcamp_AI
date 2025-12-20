@@ -29,23 +29,36 @@ def plot_scores(models):
     plt.tight_layout()
     plt.show()
 
-def plot_predictions(X, y_true, y_pred):
-    # Use weight vs height for a readable 2D view
+def plot_predictions_pairs(X, y_true, y_pred):
+    """Plot all 2D feature pairs (weight-height, weight-bone, height-bone)."""
+    pairs = [
+        (0, 1, "Weight", "Height"),
+        (0, 2, "Weight", "Bone density"),
+        (1, 2, "Height", "Bone density"),
+    ]
     colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]
     labels = ["Venus", "Earth", "Mars", "Asteroids"]
-    plt.figure(figsize=(9, 6))
-    for cls, color, label in zip(range(4), colors, labels):
-        mask_true = (y_true.ravel() == cls)
-        mask_pred = (y_pred.ravel() == cls)
-        plt.scatter(X[mask_true, 0], X[mask_true, 1], c=color, marker="o", 
-                    edgecolors="k", alpha=0.6, label=f"Actual {label}")
-        plt.scatter(X[mask_pred, 0], X[mask_pred, 1], color=color, marker="x",
-                    linewidths=1.5, alpha=0.9, label=f"Pred {label}")
-    plt.xlabel("Weight")
-    plt.ylabel("Height")
-    plt.title("Best model – actual vs predicted classes")
-    plt.grid(True, linestyle="--", alpha=0.4)
-    plt.legend(ncol=2, fontsize=9)
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    for ax, (i, j, xi, yi) in zip(axes, pairs):
+        for cls, color, label in zip(range(4), colors, labels):
+            mask_true = (y_true.ravel() == cls)
+            mask_pred = (y_pred.ravel() == cls)
+            ax.scatter(
+                X[mask_true, i], X[mask_true, j],
+                c=color, marker="o", edgecolors="k", alpha=0.55,
+                label=f"Actual {label}" if (i, j) == (0, 1) else None,
+            )
+            ax.scatter(
+                X[mask_pred, i], X[mask_pred, j],
+                color=color, marker="x", linewidths=1.2, alpha=0.9,
+                label=f"Pred {label}" if (i, j) == (0, 1) else None,
+            )
+        ax.set_xlabel(xi)
+        ax.set_ylabel(yi)
+        ax.grid(True, linestyle="--", alpha=0.4)
+    axes[0].legend(ncol=2, fontsize=8)
+    fig.suptitle("Best model – actual vs predicted (2D pairs)")
     plt.tight_layout()
     plt.show()
 
@@ -97,7 +110,7 @@ def main():
 
     # Plots
     plot_scores(models)
-    plot_predictions(X_test, Y_test, y_test_pred)
+    plot_predictions_pairs(X_test, Y_test, y_test_pred)
     return 0
 
 
