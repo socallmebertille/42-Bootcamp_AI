@@ -37,9 +37,7 @@ def l2(theta):
         return None
     if theta.ndim != 2:
         return None
-    theta_prime = theta.copy()
-    theta_prime[0, 0] = 0
-    return float((theta_prime.T @ theta_prime).item()) # item() : recupere la valeur scalaire de la mutiplication de 2 vecteur place au sein d'un tableau => equivaent a np[0, 0]
+    return float((theta[1:].T @ theta[1:]).item()) # item() : recupere la valeur scalaire de la mutiplication de 2 vecteur place au sein d'un tableau => equivaent a np[0, 0]
 
 def main():
     """Tester of my l2 reg functions"""

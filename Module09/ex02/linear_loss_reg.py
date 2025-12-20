@@ -19,15 +19,15 @@ def reg_loss_(y, y_hat, theta, lambda_):
     Raises:
         This function should not raise any Exception.
     """
-    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray):
+    if not isinstance(y, np.ndarray) or not isinstance(y_hat, np.ndarray) or not isinstance(theta, np.ndarray) or not isinstance(lambda_, float):
         return None
-    if y.size == 0 or y_hat.size == 0:
+    if y.size == 0 or y_hat.size == 0 or theta.size == 0:
         return None
-    if y.ndim != 2 or y_hat.ndim != 2:
+    if y.ndim != 2 or y_hat.ndim != 2 or theta.ndim != 2:
         return None
-    if y.shape != y_hat.shape:
+    if y.shape != y_hat.shape or y.shape[1] != 1 or theta.shape[1] != 1:
         return None
-    return
+    return ((((y_hat - y).T @ (y_hat - y)) + (lambda_ * l2(theta))) / (2 * y.shape[0])).item()
 
 def main():
     """Tester of my regularized loss function of a linear regression model"""
