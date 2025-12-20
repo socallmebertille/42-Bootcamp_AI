@@ -115,6 +115,14 @@ def main():
     print("loss : \n", mylr.loss_(Y,y_hat))
     print("Expected : 5.03807307639228")
 
+    print("\n============= Test get_params_ / set_params_ ===================")
+    params = mylr.get_params_()
+    print("Parameters:\n", params)
+    
+    mylr.set_params_(alpha=0.01, lambda_=1.0)
+    print("After setting alpha=0.01, lambda_=1.0:")
+    print("New alpha:", mylr.alpha, "New lambda:", mylr.lambda_)
+
     return 0
 
 if __name__ == "__main__":
