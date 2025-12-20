@@ -37,6 +37,10 @@ class MyRidge(MyLinearRegression):
             self.lambda_ = kwargs['lambda_']
         return self
 
+    @staticmethod
+    def data_spliter_(x, y, proportion):
+        return MyLinearRegression.data_spliter_(x, y, proportion)
+
     def predict_(self, x):
         return super().predict_(x)
     

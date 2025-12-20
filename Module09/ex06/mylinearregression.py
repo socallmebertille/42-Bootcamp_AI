@@ -4,6 +4,7 @@ from itertools import combinations_with_replacement
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
+from Module07.ex09.data_spliter import data_spliter
 from Module07.ex01.prediction import predict_
 from Module07.ex02.loss import loss_, loss_elem_
 from Module05.ex09.other_losses import mse_
@@ -23,12 +24,9 @@ class MyLinearRegression():
             self.thetas = thetas.reshape(-1, 1)
         else:
             self.thetas = thetas
-    
-    def fit_(self, x, y):
-        new_theta = fit_(x, y, self.thetas, self.alpha, self.max_iter)
-        if new_theta is not None:
-            self.thetas = new_theta
-        return self.thetas
+
+    def data_spliter_(x, y, proportion):
+        return data_spliter(x, y, proportion)
     
     def predict_(self, x):
         if not isinstance(x, np.ndarray) or not isinstance(self.thetas, np.ndarray):
@@ -43,6 +41,12 @@ class MyLinearRegression():
     
     def loss_(self, y, y_hat):
         return loss_(y, y_hat)
+    
+    def fit_(self, x, y):
+        new_theta = fit_(x, y, self.thetas, self.alpha, self.max_iter)
+        if new_theta is not None:
+            self.thetas = new_theta
+        return self.thetas
     
     @staticmethod
     def add_polynomial_features(x, power):
