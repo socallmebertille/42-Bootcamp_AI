@@ -71,7 +71,9 @@ def vec_reg_linear_grad(y, x, theta, lambda_):
         return None
     x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
     y_hat = x_prime @ theta
-    return (x_prime.T @ (y_hat - y) + (lambda_ * theta)) / y.shape[0]
+    theta_prime = theta.copy()
+    theta_prime[0,0] = 0 # on ne regularise pas le biais 
+    return (x_prime.T @ (y_hat - y) + (lambda_ * theta_prime)) / y.shape[0]
 
 def main():
     """Tester of my gradient function of a linear regression model"""

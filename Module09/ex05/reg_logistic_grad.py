@@ -32,7 +32,7 @@ def reg_logistic_grad(y, x, theta, lambda_):
         sum_val = 0
         for j in range(x_prime.shape[1]):
             sum_val += x_prime[i, j] * theta[j, 0]
-        y_hat[i, 0] = sum_val
+        y_hat[i, 0] = 1 / (1 + np.exp(-sum_val)) # diff entre reg lin et log => predict avec sigmoid = 1 / (1 + np.exp(-x))
     gradient = np.zeros(theta.shape)
     for j in range(theta.shape[0]):
         sum_grad = 0
@@ -68,8 +68,10 @@ def vec_reg_logistic_grad(y, x, theta, lambda_):
     if x.shape[0] != y.shape[0] or y.shape[1] != 1 or theta.shape != (x.shape[1] + 1 , 1):
         return None
     x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
-    y_hat = x_prime @ theta
-    return (x_prime.T @ (y_hat - y) + (lambda_ * theta)) / y.shape[0]
+    y_hat = 1 / (1 + np.exp(-(x_prime @ theta))) # diff entre reg lin et log => predict avec sigmoid = 1 / (1 + np.exp(-x))
+    theta_prime = theta.copy()
+    theta_prime[0,0] = 0 # on ne regularise pas le biais 
+    return (x_prime.T @ (y_hat - y) + (lambda_ * theta_prime)) / y.shape[0]
 
 def main():
     """Tester of my gradient function of a logistic regression model"""
@@ -85,11 +87,11 @@ def main():
     print("theta : \n", theta)
 
     print("============= 1.1 ===================")
-    print("gradient w/ lambda 1 : \n", reg_logistic_grad(y, x, theta, 1))
+    print("gradient w/ lambda 1 : \n", reg_logistic_grad(y, x, theta, 1.0))
     print("Expected : array([[-0.55711039],\n\t\t[-1.40334809],\n\t\t[-1.91756886],\n\t\t[-2.56737958],\n\t\t[-3.03924017]])")
 
     print("============= 1.2 ===================")
-    print("vector gradient w/ lambda 1 : \n", vec_reg_logistic_grad(y, x, theta, 1))
+    print("vector gradient w/ lambda 1 : \n", vec_reg_logistic_grad(y, x, theta, 1.0))
     print("Expected : array([[-0.55711039],\n\t\t[-1.40334809],\n\t\t[-1.91756886],\n\t\t[-2.56737958],\n\t\t[-3.03924017]])")
 
     print("============= 2.1 ===================")
