@@ -132,14 +132,17 @@ def main():
     Y = np.array([[1], [0], [1]])
     thetas = np.array([[2], [0.5], [7.1], [-4.3], [2.09]])
     
-    mylr = MyLogisticRegression(thetas, alpha=0.001, max_iter=10000, lambda_=0.0)
+    X_normalized, mean, std = MyLogisticRegression.normalize_features(X)
+
+    mylr = MyLogisticRegression(thetas, alpha=0.001, max_iter=10000, penality='l2', lambda_=0.1)
+    mylr.fit_(X_normalized, Y)
 
     print("X array : \n", X)
     print("Y array : \n", Y)
     print("Initial theta : \n", thetas)
 
     print("\n============= 1 - Initial Prediction ===================")
-    y_hat = mylr.predict_(X)
+    y_hat = mylr.predict_(X_normalized)
     print("predict : \n", y_hat)
     print("Expected : array([[0.99930437],\n\t\t[1. ],\n\t\t[1. ]])")
 
@@ -151,12 +154,12 @@ def main():
     print("\n============= 3 - Training ===================")
     print("Training with alpha={}, max_iter={}, lambda_={}...".format(
     mylr.alpha, mylr.max_iter, mylr.lambda_))
-    mylr.fit_(X, Y)
+    mylr.fit_(X_normalized, Y)
     print("thetas trained : \n", mylr.theta)
     print("Expected : array([[ 2.11826435]\n\t\t[ 0.10154334]\n\t\t[ 6.43942899]\n\t\t[-5.10817488]\n\t\t[ 0.6212541 ]])")
 
     print("\n============= 4 - Prediction after training ===================")
-    y_hat = mylr.predict_(X)
+    y_hat = mylr.predict_(X_normalized)
     print("predict : \n", y_hat)
     print("Expected : array([[0.57606717]\n\t\t[0.68599807]\n\t\t[0.06562156]])")
 
