@@ -1,5 +1,9 @@
 import numpy as np
 
+# import sys, os
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# from ex00.polynomial_model_extended import add_polynomial_features
+
 def reg_linear_grad(y, x, theta, lambda_):
     """Computes the regularized linear gradient of three non-empty numpy.ndarray,
     with two for-loop. The three arrays must have compatible shapes.
@@ -16,6 +20,34 @@ def reg_linear_grad(y, x, theta, lambda_):
     Raises:
         This function should not raise any Exception.
     """
+    if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(theta, np.ndarray) or not isinstance(lambda_, float):
+        return None
+    if x.size == 0 or y.size == 0 or theta.size == 0:
+        return None
+    if x.ndim != 2 or y.ndim != 2 or theta.ndim != 2:
+        return None
+    if x.shape[0] != y.shape[0] or y.shape[1] != 1 or theta.shape != (x.shape[1] + 1 , 1):
+        return None
+    x_prime = np.zeros((x.shape[0], x.shape[1] + 1))
+    for l in range(x_prime.shape[0]):
+        for c in range(x_prime.shape[1]):
+            x_prime[l, c] = 1 if c == 0 else x[l, c - 1]
+    y_hat = np.zeros((x_prime.shape[0], 1))
+    for i in range(x_prime.shape[0]):
+        sum_val = 0
+        for j in range(x_prime.shape[1]):
+            sum_val += x_prime[i, j] * theta[j, 0]
+        y_hat[i, 0] = sum_val
+    gradient = np.zeros(theta.shape)
+    for j in range(theta.shape[0]):
+        sum_grad = 0
+        for i in range(x_prime.shape[0]):
+            sum_grad += (y_hat[i, 0] - y[i, 0]) * x_prime[i, j]
+        if j == 0:
+            gradient[j, 0] = sum_grad / y.shape[0]
+        else:
+            gradient[j, 0] = (sum_grad + lambda_ * theta[j, 0]) / y.shape[0]
+    return gradient
 
 def vec_reg_linear_grad(y, x, theta, lambda_):
     """Computes the regularized linear gradient of three non-empty numpy.ndarray,
@@ -33,16 +65,17 @@ def vec_reg_linear_grad(y, x, theta, lambda_):
     Raises:
         This function should not raise any Exception.
     """
-    if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(theta, np.ndarray):
+    if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray) or not isinstance(theta, np.ndarray) or not isinstance(lambda_, float):
         return None
     if x.size == 0 or y.size == 0 or theta.size == 0:
         return None
     if x.ndim != 2 or y.ndim != 2 or theta.ndim != 2:
         return None
-    if theta.shape[1] != 1 or y.shape[1] != 1 or x.shape[1] + 1 != theta.shape[0] or x.shape[0] != y.shape[0]:
+    if x.shape[0] != y.shape[0] or y.shape[1] != 1 or theta.shape != (x.shape[1] + 1 , 1):
         return None
-
-    return 
+    x_prime = np.hstack((np.ones((x.shape[0], 1)), x))
+    y_hat = x_prime @ theta
+    return (x_prime.T @ (y_hat - y) + (lambda_ * theta)) / y.shape[0]
 
 def main():
     """Tester of my gradient function of a linear regression model"""
