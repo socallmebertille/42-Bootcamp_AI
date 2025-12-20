@@ -27,10 +27,7 @@ def main():
     # Second split: 80% of trainval = train, 20% of trainval = validation
     X_train, X_val, Y_train, Y_val = MyR.data_spliter_(X_trainval, Y_trainval, 0.8)
 
-    # Define hyperparameters to explore
-    degrees = range(1, 5)  # Polynomial degrees 1 to 4
     lambdas = np.arange(0, 1.2, 0.2)  # Lambda from 0 to 1 with step 0.2
-
     models = {}
     best_model = None
     best_mse = float('inf')
@@ -77,8 +74,7 @@ def main():
                 'mse_test': mse_test
             }
             
-            # Track best model based on validation MSE
-            if mse_val < best_mse:
+            if mse_val < best_mse:                      # Evaluate models on the cross-validation set
                 best_mse = mse_val
                 best_model = model_key
                 best_params = {
@@ -88,7 +84,6 @@ def main():
                     'mean': mean,
                     'std': std
                 }
-        print(f"Degree {degree} → Train MSE = {mse_train}, Test MSE = {mse_test}")
 
     # Save all models
     with open(os.path.join(os.path.dirname(__file__), "models.pkl"), "wb") as f:
