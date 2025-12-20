@@ -1,9 +1,5 @@
 import numpy as np
 
-# import sys, os
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-# from ex00.polynomial_model_extended import add_polynomial_features
-
 def reg_linear_grad(y, x, theta, lambda_):
     """Computes the regularized linear gradient of three non-empty numpy.ndarray,
     with two for-loop. The three arrays must have compatible shapes.
