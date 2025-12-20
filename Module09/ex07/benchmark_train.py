@@ -1,9 +1,81 @@
 import numpy as np
 import pandas as pd
 import pickle
+import matplotlib.pyplot as plt
 import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ex06.ridge import MyRidge as MyR
+
+def plot_model_evaluation(models):
+    """
+    Plot Train / Validation MSE as a function of lambda
+    for each polynomial degree (1 to 4).
+    """
+    degrees = [1, 2, 3, 4]
+    fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+    fig.suptitle("Model evaluation — Ridge Regression\nMSE vs λ for different polynomial degrees", fontsize=16)
+    all_mse = [m['mse_val'] for m in models.values()] + [m['mse_train'] for m in models.values()]
+    ymin, ymax = min(all_mse), max(all_mse)
+    for i, degree in enumerate(degrees):
+        ax = axes[i // 2, i % 2]
+        lambdas = []
+        mse_train = []
+        mse_val = []
+        for model in models.values():
+            if model['degree'] == degree:
+                lambdas.append(model['lambda'])
+                mse_train.append(model['mse_train'])
+                mse_val.append(model['mse_val'])
+        # Sort by lambda
+        idx = np.argsort(lambdas)
+        lambdas = np.array(lambdas)[idx] # equivalent syntaxique : [lambdas[i] for i in idx]
+        mse_train = np.array(mse_train)[idx]
+        mse_val = np.array(mse_val)[idx]
+        # Plot curves
+        ax.plot(lambdas, mse_train, 'o-', label='Train MSE') # o- => marker rond et ligne continue
+        ax.plot(lambdas, mse_val, 's-', label='Validation MSE') # s- => marker carre et ligne continue
+        # Highlight best lambda (validation)
+        best_idx = np.argmin(mse_val)
+        ax.scatter(lambdas[best_idx], mse_val[best_idx], color='red', s=120, zorder=10, label='Best λ')
+        ax.set_title(f"Polynomial degree {degree}")
+        ax.set_xlabel("λ (regularization factor)")
+        ax.set_ylabel("Mean Squared Error")
+        ax.set_ylim(ymin * 0.95, ymax * 1.05)
+        ax.grid(alpha=0.3)
+        ax.legend()
+    plt.tight_layout()
+    plt.show()
+
+def plot_predictions_vs_true(X_test, Y_test, models, best_model_key):
+    """
+    Plot true prices and predicted prices for the best polynomial degree,
+    using all lambda values (as required by the subject).
+    """
+    best_degree = models[best_model_key]['degree']
+    # Select all models with the best degree
+    degree_models = [m for m in models.values() if m['degree'] == best_degree]
+    degree_models.sort(key=lambda m: m['lambda'])
+    # Sort test set by true price for smooth curves
+    order = np.argsort(Y_test.flatten())
+    Y_test_sorted = Y_test[order]
+    X_test_sorted = X_test[order]
+    plt.figure(figsize=(14, 8))
+    # Plot true prices
+    plt.plot(Y_test_sorted, color='black', linewidth=3, label='True price')
+    # Plot predictions for each lambda
+    for model in degree_models:
+        X_poly = MyR.add_polynomial_features(X_test_sorted, model['degree'])
+        X_poly_norm = (X_poly - model['mean']) / model['std']
+        lr = MyR(model['theta'], alpha=1e-3, max_iter=1, lambda_=model['lambda'])
+        y_pred = lr.predict_(X_poly_norm)
+        plt.plot(y_pred, linewidth=2, alpha=0.7, label=f"λ = {model['lambda']:.1f}")
+    plt.title(f"True price vs predictions\nPolynomial degree {best_degree} — effect of regularization", fontsize=14)
+    plt.xlabel("Samples (sorted by true price)")
+    plt.ylabel("Price")
+    plt.grid(alpha=0.3)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 def main():
     """Tester of my Machine Learning function"""
@@ -106,6 +178,12 @@ def main():
             'params': best_params,
             'mse_val': best_mse
         }, f)
+
+    # Plot the evaluation curve which will help you to select the best model (evaluation metrics vs models + λ factor)
+    plot_model_evaluation(models)
+
+    # Plot the true price and the predicted price obtained via your best model with the different λ values (meaning the dataset + the 5 predicted curves)
+    plot_predictions_vs_true(X_test, Y_test, models, best_model)
 
     return 0
 
