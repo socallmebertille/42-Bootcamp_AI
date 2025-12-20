@@ -28,10 +28,11 @@ def reg_log_loss_(y, y_hat, theta, lambda_):
     if y.shape != y_hat.shape or y.shape[1] != 1 or theta.shape[1] != 1:
         return None
     m = y.shape[0]
-    one_vec = np.ones((m, 1))
-    loss_function = - (((y.T @ np.log(y_hat)) + ((one_vec - y).T @ (np.log(one_vec - y_hat)))) / m)
-    biais = ((lambda_ * l2(theta)) / (2 * m))
-    return (loss_function + biais).item()
+    eps = 1e-15
+    y_hat_clipped = np.clip(y_hat, eps, 1 - eps)
+    loss = -np.mean(y * np.log(y_hat_clipped) + (1 - y) * np.log(1 - y_hat_clipped))
+    l2_reg = (lambda_ / (2 * m)) * np.sum(theta[1:] ** 2)
+    return loss + l2_reg
 
 def main():
     """Tester of my regularized loss function of a logistic regression model"""

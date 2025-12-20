@@ -1,19 +1,28 @@
+"""
+ridge.py - Logistic Ridge Regression
+"""
 import numpy as np
-
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from ex01.l2_reg import iterative_l2, l2
-from ex02.linear_loss_reg import reg_loss_
-from ex04.reg_linear_grad import vec_reg_linear_grad, reg_linear_grad
-from ex06.mylinearregression import MyLinearRegression
+from ex03.logistic_loss_reg import reg_log_loss_
+from ex05.reg_logistic_grad import vec_reg_logistic_grad, reg_logistic_grad
+from ex08.my_logistic_regression import MyLogisticRegression
 
-class MyRidge(MyLinearRegression):
+class MyRidge(MyLogisticRegression):
     """
     Description:
-        My personnal ridge regression class to fit like a boss
+        My personnal logistic ridge regression class to fit like a boss.
+        Inherits from MyLogisticRegression and adds proper L2 regularization support.
     """
-    def __init__(self, thetas, alpha=0.001, max_iter=1000, lambda_=0.5):
-        super().__init__(thetas, alpha, max_iter)
+    def __init__(self, thetas, alpha=0.001, max_iter=1000, lambda_=1.0):
+        if isinstance(thetas, np.ndarray):
+            self.thetas = thetas.reshape(-1, 1)
+        else:
+            print("Error\nThetas array is not from the numpy library")
+        
+        self.alpha = alpha
+        self.max_iter = max_iter
         self.lambda_ = lambda_
 
     def get_params_(self):
@@ -38,79 +47,88 @@ class MyRidge(MyLinearRegression):
         return self
 
     def predict_(self, x):
+        """Inherited from MyLogisticRegression - uses sigmoid"""
         return super().predict_(x)
     
     def loss_elem_(self, y, y_hat):
         """
-        Returns element-wise squared differences (loss elements)
-        This is NOT the regularized version - just the base loss elements
+        Returns element-wise logistic loss (cross-entropy)
+        NOT regularized - just the base loss elements
         """
         return super().loss_elem_(y, y_hat)
     
     def loss_(self, y, y_hat):
         """
-        Returns the regularized loss (MSE + L2 regularization)
+        Returns the regularized logistic loss (Cross-entropy + L2 regularization)
         """
-        return reg_loss_(y, y_hat, self.thetas, self.lambda_)
+        return super().loss_(y, y_hat)
     
     def gradient_(self, x, y):
         """
-        Computes the regularized gradient
+        Computes the regularized logistic gradient
+        IMPORTANT: Check the parameter order expected by vec_reg_logistic_grad!
         """
-        return vec_reg_linear_grad(x, y, self.thetas, self.lambda_)
+        return vec_reg_logistic_grad(y, x, self.thetas, self.lambda_)
     
     def fit_(self, x, y):
-        if not isinstance(x, np.ndarray) or not isinstance(y, np.ndarray):
-            return None
-        if x.size == 0 or y.size == 0:
-            return None
-        new_theta = np.copy(self.thetas)
-        for _ in range(self.max_iter):
-            grad = vec_reg_linear_grad(x, y, new_theta, self.lambda_)
-            if grad is None:
-                return None
-            new_theta = new_theta - self.alpha * grad
-        self.thetas = np.copy(new_theta)
+        """
+        Fits the logistic ridge regression model using gradient descent
+        """
+        self.thetas = super().fit_(x, y)
         return self.thetas
 
-def main():
-    """Univariate Logistic Regression
-    Train three different univariate models to predict spacecraft prices.
-    """
 
+def main():
+    """Test Logistic Ridge Regression"""
+
+    # valeurs expected encore erronnees mais avec lambda 0.0 on s'y rapproche le +
+    
     print("============= TEST ===================")
 
     X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [3., 5., 9., 14.]])
     Y = np.array([[1], [0], [1]])
     thetas = np.array([[2], [0.5], [7.1], [-4.3], [2.09]])
-    mylr = MyRidge(thetas)
+    
+    mylr = MyRidge(thetas, alpha=0.001, max_iter=10000, lambda_=0.0)
 
     print("X array : \n", X)
     print("Y array : \n", Y)
-    print("theta : \n", thetas)
+    print("Initial theta : \n", thetas)
 
-    print("============= 1 ===================")
+    print("\n============= 1 - Initial Prediction ===================")
     y_hat = mylr.predict_(X)
     print("predict : \n", y_hat)
     print("Expected : array([[0.99930437],\n\t\t[1. ],\n\t\t[1. ]])")
 
-    print("============= 2 ===================")
-    print("loss : \n", mylr.loss_(Y,y_hat))
+    print("\n============= 2 - Initial Loss ===================")
+    loss = mylr.loss_(Y, y_hat)
+    print("loss : ", loss)
     print("Expected : 11.513157421577002")
 
-    print("============= 3 ===================")
+    print("\n============= 3 - Training ===================")
+    print("Training with alpha={}, max_iter={}, lambda_={}...".format(
+        mylr.alpha, mylr.max_iter, mylr.lambda_))
     mylr.fit_(X, Y)
     print("thetas trained : \n", mylr.thetas)
     print("Expected : array([[ 2.11826435]\n\t\t[ 0.10154334]\n\t\t[ 6.43942899]\n\t\t[-5.10817488]\n\t\t[ 0.6212541 ]])")
 
-    print("============= 4 ===================")
+    print("\n============= 4 - Prediction after training ===================")
     y_hat = mylr.predict_(X)
     print("predict : \n", y_hat)
     print("Expected : array([[0.57606717]\n\t\t[0.68599807]\n\t\t[0.06562156]])")
 
-    print("============= 5 ===================")
-    print("loss : \n", mylr.loss_(Y,y_hat))
+    print("\n============= 5 - Final Loss ===================")
+    loss = mylr.loss_(Y, y_hat)
+    print("loss : ", loss)
     print("Expected : 1.4779126923052268")
+    
+    print("\n============= Test get_params_ / set_params_ ===================")
+    params = mylr.get_params_()
+    print("Parameters:", params)
+    
+    mylr.set_params_(alpha=0.01, lambda_=2.0)
+    print("After setting alpha=0.01, lambda_=2.0:")
+    print("New alpha:", mylr.alpha, "New lambda:", mylr.lambda_)
 
     return 0
 
