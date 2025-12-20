@@ -124,7 +124,7 @@ class MyLogisticRegression():
 def main():
     """Test Logistic Ridge Regression"""
 
-    # valeurs expected encore erronnees mais avec lambda 0.0 on s'y rapproche le +
+    # valeurs expected encore erronnees mais avec lambda 0.1 on s'y rapproche le +
 
     print("============= TEST ===================")
 
